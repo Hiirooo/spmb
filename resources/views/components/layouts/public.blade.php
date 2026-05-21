@@ -68,10 +68,27 @@
                 <a href="{{ route('home') }}#faq" class="text-ink-600 hover:text-ink-900">FAQ</a>
             </nav>
 
-            <a href="{{ route('daftar') }}" class="inline-flex items-center gap-2 rounded-md bg-ink-900 px-4 py-2.5 text-sm font-medium text-paper shadow-soft hover:bg-ink-800 transition">
-                Daftar
-                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
+            @auth
+                <div class="flex items-center gap-3">
+                    @if(auth()->user()->isAdmin())
+                        <a href="/admin" class="hidden text-sm text-ink-600 hover:text-ink-900 sm:inline">Admin Panel</a>
+                    @endif
+                    <a href="{{ route('portal') }}" class="inline-flex items-center gap-2 rounded-md border border-ink-300 bg-white px-3 py-2 text-sm text-ink-700 hover:bg-paper">
+                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-ink-900 text-xs font-semibold text-paper">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                        <span class="hidden sm:inline max-w-[100px] truncate">{{ auth()->user()->name }}</span>
+                    </a>
+                </div>
+            @else
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('login') }}" class="hidden rounded-md px-3 py-2 text-sm font-medium text-ink-700 hover:text-ink-900 sm:inline-block">
+                        Masuk
+                    </a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center gap-2 rounded-md bg-ink-900 px-4 py-2.5 text-sm font-medium text-paper shadow-soft hover:bg-ink-800 transition">
+                        Daftar
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                </div>
+            @endauth
         </div>
     </header>
 

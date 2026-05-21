@@ -12,6 +12,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class PendaftaranForm extends Component implements HasForms
@@ -22,7 +23,12 @@ class PendaftaranForm extends Component implements HasForms
 
     public function mount(): void
     {
-        $this->form->fill();
+        $user = Auth::user();
+
+        $this->form->fill([
+            'nama_lengkap' => $user?->name,
+            'email' => $user?->email,
+        ]);
     }
 
     public function form(Schema $schema): Schema
@@ -129,6 +135,7 @@ class PendaftaranForm extends Component implements HasForms
     {
         $payload = $this->form->getState();
         $payload['status'] = 'baru';
+        $payload['user_id'] = Auth::id();
 
         $pendaftar = Pendaftar::create($payload);
 

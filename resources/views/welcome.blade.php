@@ -27,7 +27,7 @@
                 </p>
 
                 <div class="mt-10 flex flex-wrap items-center gap-4">
-                    <a href="{{ route('daftar') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-6 py-3.5 text-sm font-semibold text-ink-950 shadow-soft transition hover:bg-gold-500">
+                    <a href="{{ auth()->check() ? route('daftar') : route('register') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-6 py-3.5 text-sm font-semibold text-ink-950 shadow-soft transition hover:bg-gold-500">
                         Mulai Pendaftaran
                         <svg class="h-4 w-4 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -217,7 +217,7 @@
                         Kuota terbatas. Pendaftaran ditutup setelah kuota terpenuhi.
                     </p>
                 </div>
-                <a href="{{ route('daftar') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-7 py-4 text-sm font-semibold text-ink-950 shadow-lift transition hover:bg-gold-500">
+                <a href="{{ auth()->check() ? route('daftar') : route('register') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-7 py-4 text-sm font-semibold text-ink-950 shadow-lift transition hover:bg-gold-500">
                     Daftar Sekarang
                     <svg class="h-4 w-4 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>

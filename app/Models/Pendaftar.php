@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pendaftar extends Model
 {
     protected $fillable = [
+        'user_id',
         'nomor_pendaftaran',
         'nama_lengkap',
         'nik',
@@ -30,6 +32,11 @@ class Pendaftar extends Model
             'tanggal_lahir' => 'date',
             'tahun_lulus' => 'integer',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected static function booted(): void
