@@ -43,6 +43,8 @@ class PendaftarForm
                             ->label('NIK')
                             ->required()
                             ->length(16)
+                            ->rule('regex:/^[0-9]+$/')
+                            ->validationMessages(['regex' => 'NIK harus berupa 16 digit angka.'])
                             ->unique(ignoreRecord: true),
                         Select::make('jenis_kelamin')
                             ->label('Jenis Kelamin')

@@ -42,7 +42,8 @@ class PendaftaranForm extends Component implements HasForms
                             ->label('NIK')
                             ->required()
                             ->length(16)
-                            ->numeric()
+                            ->rule('regex:/^[0-9]+$/')
+                            ->validationMessages(['regex' => 'NIK harus berupa 16 digit angka.'])
                             ->unique(table: 'pendaftars', column: 'nik'),
                         Select::make('jenis_kelamin')
                             ->label('Jenis Kelamin')
