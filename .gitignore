@@ -25,3 +25,9 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Filament + Livewire published assets (regenerable)
+/public/css/filament/
+/public/fonts/filament/
+/public/js/filament/
+/public/vendor/livewire/
