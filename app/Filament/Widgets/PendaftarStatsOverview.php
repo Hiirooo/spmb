@@ -14,11 +14,13 @@ class PendaftarStatsOverview extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $total = Pendaftar::count();
-        $baru = Pendaftar::where('status', 'baru')->count();
-        $verifikasi = Pendaftar::where('status', 'verifikasi')->count();
-        $diterima = Pendaftar::where('status', 'diterima')->count();
-        $ditolak = Pendaftar::where('status', 'ditolak')->count();
+        $query = $this->scopedQuery();
+
+        $total = (clone $query)->count();
+        $baru = (clone $query)->where('status', 'baru')->count();
+        $verifikasi = (clone $query)->where('status', 'verifikasi')->count();
+        $diterima = (clone $query)->where('status', 'diterima')->count();
+        $ditolak = (clone $query)->where('status', 'ditolak')->count();
 
         return [
             Stat::make('Total Pendaftar', $total)
@@ -46,5 +48,15 @@ class PendaftarStatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-x-circle')
                 ->color('danger'),
         ];
+    }
+
+    protected function scopedQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = Pendaftar::query();
+        $user = auth()->user();
+        if ($user && $user->isSekolahAdmin() && $user->sekolah_id) {
+            $query->where('sekolah_id', $user->sekolah_id);
+        }
+        return $query;
     }
 }

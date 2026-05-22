@@ -69,7 +69,7 @@ class RegisterForm extends Component implements HasForms
 
         session()->regenerate();
 
-        return redirect()->intended(route('portal'));
+        return redirect()->route('portal');
     }
 
     public function render()

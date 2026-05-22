@@ -16,37 +16,42 @@
                 </div>
 
                 <h1 class="mt-8 font-serif text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-                    SPMB SMA Negeri<br>
-                    <span class="italic text-gold-500">Sumatera Selatan</span><br>
-                    Tahun Ajaran 2026/2027
+                    Platform SPMB<br>
+                    <span class="italic text-gold-500">SMA Negeri Sumsel</span><br>
+                    untuk Sekolah & Siswa
                 </h1>
 
                 <p class="mt-8 max-w-xl text-lg leading-relaxed text-ink-300">
-                    Sistem Penerimaan Murid Baru tingkat SMA Negeri Provinsi Sumsel.
-                    Empat jalur pendaftaran: Afirmasi, Domisili, Mutasi, dan Prestasi —
-                    sesuai Juknis Disdik Sumsel.
+                    Sekolah kelola pendaftaran, kuota, dan verifikasi dokumen.
+                    Siswa cek rekomendasi jalur, daftar online, dan unggah berkas
+                    sesuai Juknis Disdik Sumsel TA 2026/2027.
                 </p>
 
                 <div class="mt-10 flex flex-wrap items-center gap-4">
-                    <a href="{{ auth()->check() ? route('daftar') : route('register') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-6 py-3.5 text-sm font-semibold text-ink-950 shadow-soft transition hover:bg-gold-500">
-                        Mulai Pendaftaran
-                        <svg class="h-4 w-4 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </a>
-                    <a href="#program" class="inline-flex items-center gap-2 rounded-md border border-ink-700 bg-ink-800/40 px-6 py-3.5 text-sm font-medium text-paper transition hover:bg-ink-800">
-                        Pelajari Program
-                    </a>
+                    @auth
+                        <a href="{{ route('sekolah.index') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-6 py-3.5 text-sm font-semibold text-ink-950 shadow-soft transition hover:bg-gold-500">
+                            Pilih Sekolah
+                            <svg class="h-4 w-4 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-6 py-3.5 text-sm font-semibold text-ink-950 shadow-soft transition hover:bg-gold-500">
+                            Saya Calon Siswa
+                            <svg class="h-4 w-4 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </a>
+                        <a href="{{ route('sekolah.register') }}" class="inline-flex items-center gap-2 rounded-md border border-ink-700 bg-ink-800/40 px-6 py-3.5 text-sm font-medium text-paper transition hover:bg-ink-800">
+                            Saya Pihak Sekolah
+                        </a>
+                    @endauth
                 </div>
             </div>
 
             <div class="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-ink-700 lg:grid-cols-4">
                 @php
                 $heroStats = [
+                    ['label' => 'Sekolah Terdaftar', 'value' => $totalSekolah, 'desc' => 'aktif menerima'],
                     ['label' => 'Total Pendaftar', 'value' => $totalPendaftar, 'desc' => 'pendaftaran masuk'],
                     ['label' => 'Telah Diterima', 'value' => $diterima, 'desc' => 'lulus seleksi'],
-                    ['label' => 'Sedang Diverifikasi', 'value' => $verifikasi, 'desc' => 'dalam proses'],
-                    ['label' => 'Program Studi', 'value' => 6, 'desc' => 'tersedia'],
+                    ['label' => 'Sedang Verifikasi', 'value' => $verifikasi, 'desc' => 'dalam proses'],
                 ];
                 @endphp
                 @foreach($heroStats as $stat)
@@ -64,37 +69,38 @@
         <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div class="max-w-xl">
-                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-600">SMA Negeri Tujuan</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-600">Sekolah Terdaftar</p>
                     <h2 class="mt-3 font-serif text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
-                        Pilihan SMA Negeri<br>se-Sumatera Selatan
+                        SMA Negeri se-Sumatera Selatan
                     </h2>
                 </div>
-                <p class="max-w-sm text-sm leading-relaxed text-ink-500">
-                    SMA Negeri unggulan di Sumatera Selatan, masing-masing dengan keunggulan akademik & non-akademik tersendiri.
-                </p>
+                <a href="{{ route('sekolah.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-ink-700 hover:text-ink-900">
+                    Lihat Semua Sekolah
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
             </div>
 
-            @php
-            $sekolah = [
-                ['name' => 'SMAN 1 Palembang', 'desc' => 'SMA Negeri tertua di Sumsel dengan rekam prestasi olimpiade nasional.', 'tag' => 'Palembang'],
-                ['name' => 'SMAN 3 Palembang', 'desc' => 'Unggulan di bidang sains dan riset pelajar.', 'tag' => 'Palembang'],
-                ['name' => 'SMAN 6 Palembang', 'desc' => 'Sekolah Adiwiyata dengan budaya akademik kompetitif.', 'tag' => 'Palembang'],
-                ['name' => 'SMAN 17 Palembang', 'desc' => 'Beragam program pengembangan minat dan bakat siswa.', 'tag' => 'Palembang'],
-                ['name' => 'SMAN 1 Lubuklinggau', 'desc' => 'Pusat akademik unggulan wilayah barat Sumsel.', 'tag' => 'Lubuklinggau'],
-                ['name' => 'SMAN 1 Prabumulih', 'desc' => 'Tradisi prestasi olimpiade matematika dan sains.', 'tag' => 'Prabumulih'],
-                ['name' => 'SMAN 1 Pagar Alam', 'desc' => 'Mengembangkan sains, budaya, dan kepemimpinan siswa.', 'tag' => 'Pagar Alam'],
-                ['name' => 'SMAN Sumsel', 'desc' => 'Sekolah berasrama unggulan provinsi (Sampoerna Academy).', 'tag' => 'Asrama'],
-            ];
-            @endphp
-
-            <div class="mt-16 grid gap-px overflow-hidden rounded-lg bg-ink-200 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach($sekolah as $s)
-                    <div class="group relative bg-paper p-6 transition hover:bg-white">
-                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-600">{{ $s['tag'] }}</p>
-                        <h3 class="mt-4 font-serif text-lg font-semibold text-ink-900">{{ $s['name'] }}</h3>
-                        <p class="mt-2 text-xs leading-relaxed text-ink-500">{{ $s['desc'] }}</p>
+            <div class="mt-16 grid gap-px overflow-hidden rounded-lg bg-ink-200 sm:grid-cols-2 lg:grid-cols-3">
+                @forelse($sekolahPreview as $s)
+                    <a href="{{ route('sekolah.show', ['sekolah' => $s->slug]) }}" class="group relative bg-paper p-6 transition hover:bg-white">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-600">{{ $s->kabupaten_kota }}</p>
+                        <h3 class="mt-4 font-serif text-lg font-semibold text-ink-900">{{ $s->nama }}</h3>
+                        @if($s->deskripsi)
+                            <p class="mt-2 text-xs leading-relaxed text-ink-500 line-clamp-2">{{ $s->deskripsi }}</p>
+                        @endif
+                        <div class="mt-4 flex items-center justify-between text-xs">
+                            <span class="text-ink-500">{{ number_format($s->daya_tampung_total) }} kuota</span>
+                            <span class="font-medium text-ink-700 group-hover:translate-x-0.5 transition inline-flex items-center gap-1">
+                                Detail
+                                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                            </span>
+                        </div>
+                    </a>
+                @empty
+                    <div class="bg-paper p-8 text-center text-sm text-ink-500 sm:col-span-2 lg:col-span-3">
+                        Belum ada sekolah aktif. <a href="{{ route('sekolah.register') }}" class="font-medium text-ink-900 underline">Daftarkan sekolah pertama</a>.
                     </div>
-                @endforeach
+                @endforelse
             </div>
         </div>
     </section>
@@ -208,19 +214,34 @@
     <section class="relative bg-ink-900 text-paper">
         <div class="absolute inset-x-0 top-0 h-px gold-line"></div>
         <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-            <div class="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-                <div class="max-w-xl">
-                    <h2 class="font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
-                        Mulai langkah pertama Anda hari ini.
-                    </h2>
-                    <p class="mt-3 text-sm leading-relaxed text-ink-300">
-                        Kuota terbatas. Pendaftaran ditutup setelah kuota terpenuhi.
+            <div class="grid gap-8 lg:grid-cols-2">
+                <div class="rounded-lg border border-ink-700 bg-ink-800/40 p-8">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">Untuk Calon Siswa</p>
+                    <h3 class="mt-3 font-serif text-2xl font-semibold sm:text-3xl">
+                        Cari sekolah, cek jalur,<br>daftar online.
+                    </h3>
+                    <p class="mt-3 text-sm text-ink-300">
+                        Asesmen 10 pertanyaan untuk rekomendasi jalur paling cocok berdasarkan profil Anda.
                     </p>
+                    <a href="{{ route('sekolah.index') }}" class="mt-6 inline-flex items-center gap-2 rounded-md bg-gold-600 px-5 py-3 text-sm font-semibold text-ink-950 hover:bg-gold-500">
+                        Pilih Sekolah Tujuan
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
                 </div>
-                <a href="{{ auth()->check() ? route('daftar') : route('register') }}" class="group inline-flex items-center gap-2 rounded-md bg-gold-600 px-7 py-4 text-sm font-semibold text-ink-950 shadow-lift transition hover:bg-gold-500">
-                    Daftar Sekarang
-                    <svg class="h-4 w-4 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </a>
+
+                <div class="rounded-lg border border-ink-700 bg-ink-800/40 p-8">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">Untuk Pihak Sekolah</p>
+                    <h3 class="mt-3 font-serif text-2xl font-semibold sm:text-3xl">
+                        Kelola pendaftaran<br>tanpa biaya.
+                    </h3>
+                    <p class="mt-3 text-sm text-ink-300">
+                        Dashboard admin, verifikasi dokumen, kuota per jalur, dan statistik pendaftar real-time.
+                    </p>
+                    <a href="{{ route('sekolah.register') }}" class="mt-6 inline-flex items-center gap-2 rounded-md border border-paper bg-transparent px-5 py-3 text-sm font-semibold text-paper hover:bg-paper hover:text-ink-900 transition">
+                        Daftarkan Sekolah
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                </div>
             </div>
         </div>
     </section>

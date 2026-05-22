@@ -19,7 +19,14 @@ class LatestPendaftar extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => Pendaftar::query()->latest()->limit(5))
+            ->query(function (): Builder {
+                $query = Pendaftar::query()->latest()->limit(5);
+                $user = auth()->user();
+                if ($user && $user->isSekolahAdmin() && $user->sekolah_id) {
+                    $query->where('sekolah_id', $user->sekolah_id);
+                }
+                return $query;
+            })
             ->paginated(false)
             ->columns([
                 TextColumn::make('nomor_pendaftaran')

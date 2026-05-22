@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Pendaftar;
+use App\Models\Sekolah;
 use App\Support\SpmbDokumen;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -23,13 +24,22 @@ class PendaftaranForm extends Component implements HasForms
 
     public ?array $data = [];
 
-    public function mount(): void
+    public Sekolah $sekolah;
+
+    public ?string $jalurPreset = null;
+
+    public function mount(Sekolah $sekolah, ?string $jalur = null): void
     {
+        $this->sekolah = $sekolah;
+        $this->jalurPreset = $jalur && array_key_exists($jalur, SpmbDokumen::JALUR) ? $jalur : null;
+
         $user = Auth::user();
 
         $this->form->fill([
             'nama_lengkap' => $user?->name,
             'email' => $user?->email,
+            'sekolah_tujuan' => $sekolah->nama,
+            'jalur_pendaftaran' => $this->jalurPreset,
         ]);
     }
 
@@ -145,21 +155,10 @@ class PendaftaranForm extends Component implements HasForms
                             ->live()
                             ->native(false)
                             ->helperText('Hanya boleh memilih satu jalur. Sistem akan menolak pendaftaran ganda.'),
-                        Select::make('sekolah_tujuan')
+                        TextInput::make('sekolah_tujuan')
                             ->label('Sekolah Tujuan')
-                            ->options([
-                                'SMAN 1 Palembang' => 'SMAN 1 Palembang',
-                                'SMAN 3 Palembang' => 'SMAN 3 Palembang',
-                                'SMAN 6 Palembang' => 'SMAN 6 Palembang',
-                                'SMAN 17 Palembang' => 'SMAN 17 Palembang',
-                                'SMAN 1 Lubuklinggau' => 'SMAN 1 Lubuklinggau',
-                                'SMAN 1 Prabumulih' => 'SMAN 1 Prabumulih',
-                                'SMAN 1 Pagar Alam' => 'SMAN 1 Pagar Alam',
-                                'SMAN Sumsel (Sampoerna Academy)' => 'SMAN Sumsel (Sampoerna Academy)',
-                            ])
-                            ->required()
-                            ->searchable()
-                            ->native(false),
+                            ->disabled()
+                            ->dehydrated(),
                         Select::make('kategori_prestasi')
                             ->label('Kategori Prestasi')
                             ->options(SpmbDokumen::KATEGORI_PRESTASI)
@@ -182,6 +181,8 @@ class PendaftaranForm extends Component implements HasForms
         $payload = $this->form->getState();
         $payload['status'] = 'baru';
         $payload['user_id'] = Auth::id();
+        $payload['sekolah_id'] = $this->sekolah->id;
+        $payload['sekolah_tujuan'] = $this->sekolah->nama;
 
         $pendaftar = Pendaftar::create($payload);
 

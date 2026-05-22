@@ -40,12 +40,27 @@ class PendaftarResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) Pendaftar::where('status', 'baru')->count();
+        return (string) static::scopedQuery()->where('status', 'baru')->count();
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
         return 'warning';
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return static::scopedQuery();
+    }
+
+    protected static function scopedQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = auth()->user();
+        if ($user && $user->isSekolahAdmin() && $user->sekolah_id) {
+            $query->where('sekolah_id', $user->sekolah_id);
+        }
+        return $query;
     }
 
     public static function getGloballySearchableAttributes(): array

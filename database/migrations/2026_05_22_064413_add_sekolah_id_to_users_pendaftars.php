@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('sekolah_id')->nullable()->after('role')
+                ->constrained('sekolahs')->nullOnDelete();
+            $table->index(['role', 'sekolah_id']);
+        });
+
+        Schema::table('pendaftars', function (Blueprint $table) {
+            $table->foreignId('sekolah_id')->nullable()->after('user_id')
+                ->constrained('sekolahs')->nullOnDelete();
+            $table->index(['sekolah_id', 'status']);
+            $table->index(['sekolah_id', 'jalur_pendaftaran']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('pendaftars', function (Blueprint $table) {
+            $table->dropForeign(['sekolah_id']);
+            $table->dropColumn('sekolah_id');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['sekolah_id']);
+            $table->dropColumn('sekolah_id');
+        });
+    }
+};

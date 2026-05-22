@@ -17,11 +17,17 @@ class PendaftarPerProdiChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = Pendaftar::query()
+        $query = Pendaftar::query()
             ->selectRaw('sekolah_tujuan, COUNT(*) as total')
             ->groupBy('sekolah_tujuan')
-            ->orderByDesc('total')
-            ->get();
+            ->orderByDesc('total');
+
+        $user = auth()->user();
+        if ($user && $user->isSekolahAdmin() && $user->sekolah_id) {
+            $query->where('sekolah_id', $user->sekolah_id);
+        }
+
+        $data = $query->get();
 
         return [
             'datasets' => [

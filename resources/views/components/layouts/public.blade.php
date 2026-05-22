@@ -62,9 +62,9 @@
             </a>
 
             <nav class="hidden items-center gap-8 text-sm md:flex">
-                <a href="{{ route('home') }}#program" class="text-ink-600 hover:text-ink-900">Program</a>
-                <a href="{{ route('home') }}#jalur" class="text-ink-600 hover:text-ink-900">Jalur</a>
+                <a href="{{ route('sekolah.index') }}" class="text-ink-600 hover:text-ink-900">Sekolah</a>
                 <a href="{{ route('home') }}#timeline" class="text-ink-600 hover:text-ink-900">Timeline</a>
+                <a href="{{ route('home') }}#jalur" class="text-ink-600 hover:text-ink-900">Jalur</a>
                 <a href="{{ route('home') }}#faq" class="text-ink-600 hover:text-ink-900">FAQ</a>
             </nav>
 
@@ -115,7 +115,7 @@
                         <li><a href="{{ route('home') }}#program" class="hover:text-ink-900">Program Studi</a></li>
                         <li><a href="{{ route('home') }}#jalur" class="hover:text-ink-900">Jalur Pendaftaran</a></li>
                         <li><a href="{{ route('home') }}#timeline" class="hover:text-ink-900">Timeline PMB</a></li>
-                        <li><a href="{{ route('daftar') }}" class="hover:text-ink-900">Mulai Daftar</a></li>
+                        <li><a href="{{ route('sekolah.index') }}" class="hover:text-ink-900">Pilih Sekolah</a></li>
                     </ul>
                 </div>
                 <div>

@@ -141,7 +141,7 @@
                 <p class="mt-2 max-w-md mx-auto text-sm leading-relaxed text-ink-500">
                     Anda belum mengisi formulir pendaftaran. Lengkapi data Anda untuk memulai proses seleksi SPMB SMA Negeri Sumsel.
                 </p>
-                <a href="{{ route('daftar') }}" class="mt-6 inline-flex items-center gap-2 rounded-md bg-ink-900 px-6 py-3 text-sm font-semibold text-paper hover:bg-ink-800">
+                <a href="{{ route('sekolah.index') }}" class="mt-6 inline-flex items-center gap-2 rounded-md bg-ink-900 px-6 py-3 text-sm font-semibold text-paper hover:bg-ink-800">
                     Mulai Pendaftaran
                     <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>

@@ -15,10 +15,16 @@ class PendaftarPerJalurChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = Pendaftar::query()
+        $query = Pendaftar::query()
             ->selectRaw('jalur_pendaftaran, COUNT(*) as total')
-            ->groupBy('jalur_pendaftaran')
-            ->get();
+            ->groupBy('jalur_pendaftaran');
+
+        $user = auth()->user();
+        if ($user && $user->isSekolahAdmin() && $user->sekolah_id) {
+            $query->where('sekolah_id', $user->sekolah_id);
+        }
+
+        $data = $query->get();
 
         return [
             'datasets' => [

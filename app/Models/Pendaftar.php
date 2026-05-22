@@ -10,6 +10,7 @@ class Pendaftar extends Model
 {
     protected $fillable = [
         'user_id',
+        'sekolah_id',
         'nomor_pendaftaran',
         'nama_lengkap',
         'nik',
@@ -47,6 +48,11 @@ class Pendaftar extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function sekolah(): BelongsTo
+    {
+        return $this->belongsTo(Sekolah::class);
+    }
+
     public function dokumens(): HasMany
     {
         return $this->hasMany(PendaftarDokumen::class);
@@ -57,8 +63,16 @@ class Pendaftar extends Model
         static::creating(function (Pendaftar $pendaftar) {
             if (empty($pendaftar->nomor_pendaftaran)) {
                 $year = now()->format('Y');
-                $count = static::whereYear('created_at', $year)->count() + 1;
-                $pendaftar->nomor_pendaftaran = sprintf('SPMB-%s-%05d', $year, $count);
+                $sekolah = $pendaftar->sekolah_id
+                    ? \App\Models\Sekolah::find($pendaftar->sekolah_id)
+                    : null;
+                $prefix = $sekolah
+                    ? strtoupper(substr(preg_replace('/[^A-Z]/i', '', $sekolah->nama), 0, 4))
+                    : 'SPMB';
+                $count = static::whereYear('created_at', $year)
+                    ->when($pendaftar->sekolah_id, fn ($q) => $q->where('sekolah_id', $pendaftar->sekolah_id))
+                    ->count() + 1;
+                $pendaftar->nomor_pendaftaran = sprintf('%s-%s-%05d', $prefix ?: 'SPMB', $year, $count);
             }
         });
     }
