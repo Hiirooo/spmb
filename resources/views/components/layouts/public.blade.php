@@ -63,8 +63,8 @@
 
             <nav class="hidden items-center gap-8 text-sm md:flex">
                 <a href="{{ route('sekolah.index') }}" class="text-ink-600 hover:text-ink-900">Sekolah</a>
+                <a href="{{ route('cek-status') }}" class="text-ink-600 hover:text-ink-900">Cek Status</a>
                 <a href="{{ route('home') }}#timeline" class="text-ink-600 hover:text-ink-900">Timeline</a>
-                <a href="{{ route('home') }}#jalur" class="text-ink-600 hover:text-ink-900">Jalur</a>
                 <a href="{{ route('home') }}#faq" class="text-ink-600 hover:text-ink-900">FAQ</a>
             </nav>
 

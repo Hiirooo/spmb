@@ -150,11 +150,21 @@ class PendaftaranForm extends Component implements HasForms
                     ->components([
                         Select::make('jalur_pendaftaran')
                             ->label('Jalur Pendaftaran')
-                            ->options(SpmbDokumen::JALUR)
+                            ->options(function (): array {
+                                $penuh = $this->sekolah->jalurPenuhList();
+                                $opts = [];
+                                foreach (SpmbDokumen::JALUR as $key => $label) {
+                                    $opts[$key] = in_array($key, $penuh, true)
+                                        ? $label.' (Kuota Penuh)'
+                                        : $label;
+                                }
+                                return $opts;
+                            })
+                            ->disableOptionWhen(fn (string $value): bool => $this->sekolah->isJalurPenuh($value))
                             ->required()
                             ->live()
                             ->native(false)
-                            ->helperText('Hanya boleh memilih satu jalur. Sistem akan menolak pendaftaran ganda.'),
+                            ->helperText('Hanya boleh memilih satu jalur. Jalur yang kuotanya penuh tidak dapat dipilih.'),
                         TextInput::make('sekolah_tujuan')
                             ->label('Sekolah Tujuan')
                             ->disabled()
@@ -179,6 +189,16 @@ class PendaftaranForm extends Component implements HasForms
     public function submit(): mixed
     {
         $payload = $this->form->getState();
+
+        if ($this->sekolah->isJalurPenuh($payload['jalur_pendaftaran'])) {
+            Notification::make()
+                ->title('Kuota jalur '.$payload['jalur_pendaftaran'].' telah penuh')
+                ->body('Silakan pilih jalur lain atau cek rekomendasi ulang.')
+                ->danger()
+                ->send();
+            return null;
+        }
+
         $payload['status'] = 'baru';
         $payload['user_id'] = Auth::id();
         $payload['sekolah_id'] = $this->sekolah->id;

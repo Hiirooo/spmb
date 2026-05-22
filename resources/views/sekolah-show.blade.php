@@ -55,8 +55,15 @@
                     @foreach($stats as $key => $stat)
                         <div class="px-6 py-5">
                             <div class="flex items-start justify-between gap-4">
-                                <div>
-                                    <h3 class="font-serif text-base font-semibold text-ink-900">{{ $stat['label'] }}</h3>
+                                <div class="flex-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="font-serif text-base font-semibold text-ink-900">{{ $stat['label'] }}</h3>
+                                        @if($stat['persen_terisi'] >= 100)
+                                            <span class="inline-flex items-center rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-semibold text-rose-700 ring-1 ring-rose-200">PENUH</span>
+                                        @elseif($stat['persen_terisi'] >= 80)
+                                            <span class="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 ring-1 ring-amber-200">Hampir Penuh</span>
+                                        @endif
+                                    </div>
                                     <p class="mt-1 text-xs text-ink-500">{{ $stat['persentase'] }}% dari daya tampung · kuota {{ $stat['kuota'] }} kursi</p>
                                 </div>
                                 <div class="text-right">
@@ -65,7 +72,7 @@
                                 </div>
                             </div>
                             <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-ink-100">
-                                <div class="h-full bg-ink-900" style="width: {{ min($stat['persen_terisi'], 100) }}%"></div>
+                                <div class="h-full {{ $stat['persen_terisi'] >= 100 ? 'bg-rose-500' : ($stat['persen_terisi'] >= 80 ? 'bg-amber-500' : 'bg-ink-900') }}" style="width: {{ min($stat['persen_terisi'], 100) }}%"></div>
                             </div>
                         </div>
                     @endforeach

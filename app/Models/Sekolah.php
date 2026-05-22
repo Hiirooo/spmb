@@ -93,6 +93,25 @@ class Sekolah extends Model
             ->count();
     }
 
+    public function isJalurPenuh(string $jalur): bool
+    {
+        $persentase = $this->kuota_jalur[$jalur] ?? static::defaultKuota()[$jalur] ?? 0;
+        $kuota = (int) round(($this->daya_tampung_total * $persentase) / 100);
+        if ($kuota <= 0) {
+            return false;
+        }
+        return $this->getKuotaTerisi($jalur) >= $kuota;
+    }
+
+    public function jalurPenuhList(): array
+    {
+        return collect(static::defaultKuota())
+            ->keys()
+            ->filter(fn ($j) => $this->isJalurPenuh($j))
+            ->values()
+            ->all();
+    }
+
     public static function defaultKuota(): array
     {
         return [

@@ -20,6 +20,7 @@ Route::get('/', function () {
 
 Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
 Route::get('/sekolah/register', fn () => view('sekolah-register'))->name('sekolah.register');
+Route::get('/cek-status', fn () => view('cek-status'))->name('cek-status');
 Route::get('/sekolah/{sekolah:slug}', [SekolahController::class, 'show'])->name('sekolah.show');
 Route::get('/sekolah/{sekolah:slug}/rekomendasi', [SekolahController::class, 'rekomendasi'])->name('sekolah.rekomendasi');
 
