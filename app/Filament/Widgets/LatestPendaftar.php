@@ -28,8 +28,8 @@ class LatestPendaftar extends TableWidget
                 TextColumn::make('nama_lengkap')
                     ->label('Nama')
                     ->searchable(),
-                TextColumn::make('program_studi')
-                    ->label('Prodi')
+                TextColumn::make('sekolah_tujuan')
+                    ->label('Sekolah Tujuan')
                     ->badge()
                     ->color('info'),
                 TextColumn::make('jalur_pendaftaran')

@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Pendaftars\Schemas;
 
+use App\Support\SpmbDokumen;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class PendaftarForm
@@ -15,15 +17,13 @@ class PendaftarForm
     {
         return $schema
             ->components([
-                Section::make('Identitas Calon Mahasiswa')
-                    ->description('Data pribadi pendaftar sesuai kartu identitas')
+                Section::make('Identitas Calon Murid')
                     ->columns(2)
                     ->components([
                         TextInput::make('nomor_pendaftaran')
                             ->label('Nomor Pendaftaran')
-                            ->placeholder('Auto-generate jika dikosongkan')
-                            ->maxLength(20)
-                            ->unique(ignoreRecord: true),
+                            ->disabled()
+                            ->dehydrated(false),
                         Select::make('status')
                             ->options([
                                 'baru' => 'Baru',
@@ -32,97 +32,69 @@ class PendaftarForm
                                 'ditolak' => 'Ditolak',
                                 'cadangan' => 'Cadangan',
                             ])
-                            ->default('baru')
                             ->required()
                             ->native(false),
                         TextInput::make('nama_lengkap')
-                            ->label('Nama Lengkap')
                             ->required()
                             ->columnSpanFull(),
+                        TextInput::make('nisn')
+                            ->label('NISN')
+                            ->length(10),
                         TextInput::make('nik')
                             ->label('NIK')
-                            ->required()
                             ->length(16)
-                            ->rule('regex:/^[0-9]+$/')
-                            ->validationMessages(['regex' => 'NIK harus berupa 16 digit angka.'])
                             ->unique(ignoreRecord: true),
                         Select::make('jenis_kelamin')
-                            ->label('Jenis Kelamin')
                             ->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])
                             ->required()
                             ->native(false),
-                        TextInput::make('tempat_lahir')
-                            ->label('Tempat Lahir')
-                            ->required(),
-                        DatePicker::make('tanggal_lahir')
-                            ->label('Tanggal Lahir')
-                            ->required()
-                            ->native(false)
-                            ->maxDate(now()),
-                        Textarea::make('alamat')
-                            ->label('Alamat Lengkap')
-                            ->required()
-                            ->rows(3)
-                            ->columnSpanFull(),
+                        TextInput::make('tempat_lahir')->required(),
+                        DatePicker::make('tanggal_lahir')->required()->native(false),
+                        Textarea::make('alamat')->required()->rows(3)->columnSpanFull(),
+                    ]),
+
+                Section::make('Orang Tua / Wali')
+                    ->columns(2)
+                    ->components([
+                        TextInput::make('nama_ayah'),
+                        TextInput::make('nama_ibu'),
+                        TextInput::make('pekerjaan_ortu'),
+                        TextInput::make('penghasilan_ortu'),
                     ]),
 
                 Section::make('Kontak')
                     ->columns(2)
                     ->components([
-                        TextInput::make('email')
-                            ->label('Email')
-                            ->email()
-                            ->required()
-                            ->unique(ignoreRecord: true),
-                        TextInput::make('no_telepon')
-                            ->label('Nomor Telepon')
-                            ->tel()
-                            ->required()
-                            ->maxLength(20),
+                        TextInput::make('email')->email()->required()->unique(ignoreRecord: true),
+                        TextInput::make('no_telepon')->tel()->required()->maxLength(20),
                     ]),
 
-                Section::make('Riwayat Pendidikan')
+                Section::make('Sekolah')
                     ->columns(2)
                     ->components([
-                        TextInput::make('asal_sekolah')
-                            ->label('Asal Sekolah')
-                            ->required(),
-                        TextInput::make('tahun_lulus')
-                            ->label('Tahun Lulus')
-                            ->numeric()
-                            ->required()
-                            ->minValue(1990)
-                            ->maxValue((int) now()->format('Y')),
+                        TextInput::make('asal_sekolah')->required(),
+                        TextInput::make('tahun_lulus')->numeric()->required(),
+                        TextInput::make('sekolah_tujuan')->required()->columnSpanFull(),
                     ]),
 
-                Section::make('Pendaftaran')
+                Section::make('Jalur Pendaftaran')
                     ->columns(2)
                     ->components([
-                        Select::make('program_studi')
-                            ->label('Program Studi')
-                            ->options([
-                                'Teknik Informatika' => 'Teknik Informatika',
-                                'Sistem Informasi' => 'Sistem Informasi',
-                                'Manajemen' => 'Manajemen',
-                                'Akuntansi' => 'Akuntansi',
-                                'Hukum' => 'Hukum',
-                                'Psikologi' => 'Psikologi',
-                            ])
-                            ->required()
-                            ->searchable()
-                            ->native(false),
                         Select::make('jalur_pendaftaran')
-                            ->label('Jalur Pendaftaran')
-                            ->options([
-                                'reguler' => 'Reguler',
-                                'prestasi' => 'Prestasi',
-                                'beasiswa' => 'Beasiswa',
-                                'transfer' => 'Transfer',
-                            ])
+                            ->options(SpmbDokumen::JALUR)
                             ->required()
+                            ->live()
                             ->native(false),
+                        Select::make('kategori_prestasi')
+                            ->options(SpmbDokumen::KATEGORI_PRESTASI)
+                            ->native(false)
+                            ->visible(fn (Get $get): bool => $get('jalur_pendaftaran') === 'prestasi'),
+                        Select::make('tingkat_prestasi')
+                            ->options(SpmbDokumen::TINGKAT_PRESTASI)
+                            ->native(false)
+                            ->visible(fn (Get $get): bool => $get('jalur_pendaftaran') === 'prestasi' && $get('kategori_prestasi') === 'non_akademik'),
                         Textarea::make('catatan')
-                            ->label('Catatan Admin')
+                            ->label('Catatan Panitia')
                             ->rows(3)
                             ->columnSpanFull(),
                     ]),

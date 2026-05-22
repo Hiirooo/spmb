@@ -16,14 +16,15 @@
                 </div>
 
                 <h1 class="mt-8 font-serif text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-                    Jalan Anda Menuju<br>
-                    Pendidikan Tinggi<br>
-                    <span class="italic text-gold-500">Dimulai Di Sini.</span>
+                    SPMB SMA Negeri<br>
+                    <span class="italic text-gold-500">Sumatera Selatan</span><br>
+                    Tahun Ajaran 2026/2027
                 </h1>
 
                 <p class="mt-8 max-w-xl text-lg leading-relaxed text-ink-300">
-                    Daftar secara online dengan proses yang transparan dan terverifikasi.
-                    Dapatkan nomor pendaftaran instan dan pantau status seleksi Anda.
+                    Sistem Penerimaan Murid Baru tingkat SMA Negeri Provinsi Sumsel.
+                    Empat jalur pendaftaran: Afirmasi, Domisili, Mutasi, dan Prestasi —
+                    sesuai Juknis Disdik Sumsel.
                 </p>
 
                 <div class="mt-10 flex flex-wrap items-center gap-4">
@@ -63,37 +64,35 @@
         <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
             <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div class="max-w-xl">
-                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-600">Program Studi</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-gold-600">SMA Negeri Tujuan</p>
                     <h2 class="mt-3 font-serif text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
-                        Enam pilihan akademik<br>untuk membangun masa depan
+                        Pilihan SMA Negeri<br>se-Sumatera Selatan
                     </h2>
                 </div>
                 <p class="max-w-sm text-sm leading-relaxed text-ink-500">
-                    Setiap program disusun dengan kurikulum berbasis kompetensi dan pengajar berpengalaman di bidangnya.
+                    SMA Negeri unggulan di Sumatera Selatan, masing-masing dengan keunggulan akademik & non-akademik tersendiri.
                 </p>
             </div>
 
             @php
-            $prodi = [
-                ['name' => 'Teknik Informatika', 'desc' => 'Kembangkan solusi digital dengan pemrograman, AI, dan rekayasa perangkat lunak.', 'tag' => 'Sains & Teknologi'],
-                ['name' => 'Sistem Informasi', 'desc' => 'Padukan teknologi informasi dengan strategi bisnis untuk transformasi digital.', 'tag' => 'Sains & Teknologi'],
-                ['name' => 'Manajemen', 'desc' => 'Kuasai pengelolaan organisasi, keuangan, dan strategi kepemimpinan.', 'tag' => 'Bisnis'],
-                ['name' => 'Akuntansi', 'desc' => 'Pelajari pelaporan keuangan, audit, dan perpajakan profesional.', 'tag' => 'Bisnis'],
-                ['name' => 'Hukum', 'desc' => 'Memahami sistem hukum, advokasi, dan keadilan dalam masyarakat.', 'tag' => 'Sosial Humaniora'],
-                ['name' => 'Psikologi', 'desc' => 'Eksplorasi perilaku manusia, kognisi, dan kesehatan mental.', 'tag' => 'Sosial Humaniora'],
+            $sekolah = [
+                ['name' => 'SMAN 1 Palembang', 'desc' => 'SMA Negeri tertua di Sumsel dengan rekam prestasi olimpiade nasional.', 'tag' => 'Palembang'],
+                ['name' => 'SMAN 3 Palembang', 'desc' => 'Unggulan di bidang sains dan riset pelajar.', 'tag' => 'Palembang'],
+                ['name' => 'SMAN 6 Palembang', 'desc' => 'Sekolah Adiwiyata dengan budaya akademik kompetitif.', 'tag' => 'Palembang'],
+                ['name' => 'SMAN 17 Palembang', 'desc' => 'Beragam program pengembangan minat dan bakat siswa.', 'tag' => 'Palembang'],
+                ['name' => 'SMAN 1 Lubuklinggau', 'desc' => 'Pusat akademik unggulan wilayah barat Sumsel.', 'tag' => 'Lubuklinggau'],
+                ['name' => 'SMAN 1 Prabumulih', 'desc' => 'Tradisi prestasi olimpiade matematika dan sains.', 'tag' => 'Prabumulih'],
+                ['name' => 'SMAN 1 Pagar Alam', 'desc' => 'Mengembangkan sains, budaya, dan kepemimpinan siswa.', 'tag' => 'Pagar Alam'],
+                ['name' => 'SMAN Sumsel', 'desc' => 'Sekolah berasrama unggulan provinsi (Sampoerna Academy).', 'tag' => 'Asrama'],
             ];
             @endphp
 
-            <div class="mt-16 grid gap-px overflow-hidden rounded-lg bg-ink-200 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($prodi as $p)
-                    <div class="group relative bg-paper p-8 transition hover:bg-white">
-                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-600">{{ $p['tag'] }}</p>
-                        <h3 class="mt-4 font-serif text-2xl font-semibold text-ink-900">{{ $p['name'] }}</h3>
-                        <p class="mt-3 text-sm leading-relaxed text-ink-500">{{ $p['desc'] }}</p>
-                        <div class="mt-6 flex items-center gap-2 text-xs font-medium text-ink-700">
-                            <span>Pelajari Detail</span>
-                            <svg class="h-3 w-3 transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                        </div>
+            <div class="mt-16 grid gap-px overflow-hidden rounded-lg bg-ink-200 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach($sekolah as $s)
+                    <div class="group relative bg-paper p-6 transition hover:bg-white">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-600">{{ $s['tag'] }}</p>
+                        <h3 class="mt-4 font-serif text-lg font-semibold text-ink-900">{{ $s['name'] }}</h3>
+                        <p class="mt-2 text-xs leading-relaxed text-ink-500">{{ $s['desc'] }}</p>
                     </div>
                 @endforeach
             </div>
@@ -111,11 +110,11 @@
 
             @php
             $steps = [
-                ['num' => '01', 'title' => 'Pendaftaran', 'desc' => 'Isi data diri & pilih program studi secara online.'],
-                ['num' => '02', 'title' => 'Verifikasi', 'desc' => 'Tim admin memvalidasi dokumen Anda dalam 1–3 hari.'],
-                ['num' => '03', 'title' => 'Tes Seleksi', 'desc' => 'Mengikuti tes akademik & potensi sesuai jadwal.'],
-                ['num' => '04', 'title' => 'Wawancara', 'desc' => 'Sesi diskusi dengan tim seleksi program studi.'],
-                ['num' => '05', 'title' => 'Pengumuman', 'desc' => 'Hasil dikirim via email dan dapat dicek di portal.'],
+                ['num' => '01', 'title' => 'Buat Akun', 'desc' => 'Daftarkan akun dengan email aktif dan password yang aman.'],
+                ['num' => '02', 'title' => 'Isi Data Diri', 'desc' => 'Lengkapi NISN, NIK, data orang tua, dan asal sekolah.'],
+                ['num' => '03', 'title' => 'Unggah Berkas', 'desc' => 'Upload dokumen sesuai jalur (KK, rapor, SKL, dll). Maks 2 MB.'],
+                ['num' => '04', 'title' => 'Verifikasi', 'desc' => 'Tim panitia memvalidasi berkas dalam 1–3 hari kerja.'],
+                ['num' => '05', 'title' => 'Pengumuman', 'desc' => 'Hasil seleksi dikirim via email dan portal pendaftar.'],
             ];
             @endphp
 
@@ -149,10 +148,10 @@
 
             @php
             $jalur = [
-                ['name' => 'Reguler', 'desc' => 'Jalur seleksi standar berbasis nilai akademik dan tes potensi.', 'svg' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
-                ['name' => 'Prestasi', 'desc' => 'Untuk siswa berprestasi akademik atau non-akademik di tingkat nasional.', 'svg' => 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'],
-                ['name' => 'Beasiswa', 'desc' => 'Pembiayaan penuh untuk calon mahasiswa terpilih dengan kriteria khusus.', 'svg' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                ['name' => 'Transfer', 'desc' => 'Untuk mahasiswa pindahan dari perguruan tinggi lain.', 'svg' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                ['name' => 'Afirmasi', 'desc' => 'Untuk keluarga ekonomi tidak mampu (KIP/KKS/PKH) atau penyandang disabilitas. Min 30% kuota.', 'svg' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                ['name' => 'Domisili', 'desc' => 'Bagi calon murid berdomisili di wilayah penerimaan. Penilaian: jarak + nilai rapor. Min 30% kuota.', 'svg' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
+                ['name' => 'Mutasi', 'desc' => 'Perpindahan tugas orang tua/wali (TNI, Polri, ASN) atau anak guru. Maks 5% kuota.', 'svg' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'],
+                ['name' => 'Prestasi', 'desc' => 'Akademik (rapor + TKA), non-akademik, atau nilai TKA. Min 35% kuota.', 'svg' => 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z'],
             ];
             @endphp
 
@@ -179,11 +178,12 @@
 
             @php
             $faqs = [
-                ['q' => 'Bagaimana cara mendaftar?', 'a' => 'Klik tombol Daftar di halaman ini, isi form pendaftaran online sampai selesai, dan Anda akan menerima nomor pendaftaran secara otomatis. Tidak perlu datang ke kampus untuk pendaftaran awal.'],
-                ['q' => 'Berapa biaya pendaftaran?', 'a' => 'Pendaftaran online tidak dipungut biaya. Biaya hanya dikenakan saat tahap tes seleksi sesuai jalur yang dipilih.'],
-                ['q' => 'Kapan pengumuman seleksi?', 'a' => 'Hasil seleksi diumumkan paling lambat 14 hari setelah Anda mengikuti tes. Pengumuman dikirim via email dan dapat dicek di portal pendaftar.'],
-                ['q' => 'Dokumen apa saja yang dibutuhkan?', 'a' => 'Pas foto, KTP/Kartu Pelajar, ijazah/SKL, transkrip nilai rapor, dan surat keterangan tambahan sesuai jalur (prestasi/beasiswa).'],
-                ['q' => 'Apakah bisa pindah jalur setelah daftar?', 'a' => 'Bisa, dengan menghubungi tim admin maksimal 7 hari setelah pendaftaran. Setelah itu pilihan jalur tidak dapat diubah.'],
+                ['q' => 'Apa saja jalur pendaftaran SPMB SMA Negeri Sumsel?', 'a' => 'Empat jalur: Afirmasi (keluarga tidak mampu/disabilitas), Domisili (wilayah + nilai rapor), Mutasi (perpindahan tugas ortu/anak guru), dan Prestasi (akademik/non-akademik/TKA). Setiap calon murid hanya boleh memilih satu jalur.'],
+                ['q' => 'Berapa biaya pendaftaran?', 'a' => 'Pendaftaran online tidak dipungut biaya sesuai Juknis SPMB Sumsel. Daftar ulang setelah dinyatakan diterima dilakukan langsung di sekolah tujuan.'],
+                ['q' => 'Dokumen apa saja yang dibutuhkan?', 'a' => 'Wajib untuk semua jalur: KK, akta kelahiran, ijazah/SKL, rapor 5 semester, pas foto, dan pakta integritas. Dokumen tambahan tergantung jalur — misalnya KIP/KKS/PKH untuk afirmasi, surat domisili untuk jalur domisili, sertifikat prestasi untuk jalur prestasi.'],
+                ['q' => 'Format dan ukuran file dokumen?', 'a' => 'Format yang diterima: PDF, JPG, atau PNG. Ukuran maksimal 2 MB per file. Pastikan dokumen jelas terbaca dan sesuai aslinya.'],
+                ['q' => 'Apakah jalur prestasi wajib mengikuti TKA?', 'a' => 'Ya, sesuai aturan baru SPMB Sumsel 2026/2027, calon murid jalur prestasi akademik wajib menyertakan hasil Tes Kemampuan Akademik (TKA) sebagai komponen penilaian.'],
+                ['q' => 'Kapan pengumuman seleksi?', 'a' => 'Jadwal mengikuti Surat Edaran Disdik Sumsel 2026/2027. Pengumuman jalur Afirmasi, Domisili, Mutasi, dan Prestasi pada awal Juni; Pengumuman tes akademik pada akhir Juni. Pengumuman dikirim via email dan dapat dicek di portal pendaftar.'],
             ];
             @endphp
 

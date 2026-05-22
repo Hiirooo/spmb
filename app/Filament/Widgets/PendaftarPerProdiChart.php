@@ -9,7 +9,7 @@ class PendaftarPerProdiChart extends ChartWidget
 {
     protected static bool $isLazy = false;
 
-    protected ?string $heading = 'Pendaftar per Program Studi';
+    protected ?string $heading = 'Pendaftar per Sekolah Tujuan';
 
     protected ?string $pollingInterval = '60s';
 
@@ -18,8 +18,8 @@ class PendaftarPerProdiChart extends ChartWidget
     protected function getData(): array
     {
         $data = Pendaftar::query()
-            ->selectRaw('program_studi, COUNT(*) as total')
-            ->groupBy('program_studi')
+            ->selectRaw('sekolah_tujuan, COUNT(*) as total')
+            ->groupBy('sekolah_tujuan')
             ->orderByDesc('total')
             ->get();
 
@@ -32,7 +32,7 @@ class PendaftarPerProdiChart extends ChartWidget
                     'borderColor' => '#1d4ed8',
                 ],
             ],
-            'labels' => $data->pluck('program_studi')->all(),
+            'labels' => $data->pluck('sekolah_tujuan')->all(),
         ];
     }
 

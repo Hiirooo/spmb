@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Pendaftars\Tables;
 
+use App\Support\SpmbDokumen;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,13 +23,21 @@ class PendaftarsTable
                     ->sortable()
                     ->copyable(),
                 TextColumn::make('nama_lengkap')
-                    ->label('Nama Lengkap')
+                    ->label('Nama')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('program_studi')
-                    ->label('Prodi')
+                TextColumn::make('nisn')
+                    ->label('NISN')
                     ->searchable()
-                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('asal_sekolah')
+                    ->label('Asal Sekolah')
+                    ->searchable()
+                    ->limit(28)
+                    ->toggleable(),
+                TextColumn::make('sekolah_tujuan')
+                    ->label('Sekolah Tujuan')
+                    ->searchable()
                     ->badge()
                     ->color('info'),
                 TextColumn::make('jalur_pendaftaran')
@@ -36,25 +45,17 @@ class PendaftarsTable
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->color(fn (string $state): string => match ($state) {
-                        'reguler' => 'gray',
-                        'prestasi' => 'success',
-                        'beasiswa' => 'warning',
-                        'transfer' => 'info',
+                        'afirmasi' => 'success',
+                        'domisili' => 'gray',
+                        'mutasi' => 'warning',
+                        'prestasi' => 'info',
                         default => 'gray',
                     }),
-                TextColumn::make('asal_sekolah')
-                    ->label('Asal Sekolah')
-                    ->searchable()
-                    ->limit(30)
-                    ->toggleable(),
-                TextColumn::make('email')
-                    ->searchable()
-                    ->copyable()
-                    ->toggleable(),
-                TextColumn::make('no_telepon')
-                    ->label('Telepon')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('dokumens_count')
+                    ->label('Berkas')
+                    ->counts('dokumens')
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
@@ -84,17 +85,12 @@ class PendaftarsTable
                     ]),
                 SelectFilter::make('jalur_pendaftaran')
                     ->label('Jalur')
-                    ->options([
-                        'reguler' => 'Reguler',
-                        'prestasi' => 'Prestasi',
-                        'beasiswa' => 'Beasiswa',
-                        'transfer' => 'Transfer',
-                    ]),
-                SelectFilter::make('program_studi')
-                    ->label('Program Studi')
+                    ->options(SpmbDokumen::JALUR),
+                SelectFilter::make('sekolah_tujuan')
+                    ->label('Sekolah Tujuan')
                     ->options(fn (): array => \App\Models\Pendaftar::query()
                         ->distinct()
-                        ->pluck('program_studi', 'program_studi')
+                        ->pluck('sekolah_tujuan', 'sekolah_tujuan')
                         ->all()),
             ])
             ->recordActions([

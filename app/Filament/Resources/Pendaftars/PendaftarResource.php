@@ -55,7 +55,9 @@ class PendaftarResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            \App\Filament\Resources\Pendaftars\RelationManagers\DokumensRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pendaftar extends Model
 {
@@ -12,16 +13,23 @@ class Pendaftar extends Model
         'nomor_pendaftaran',
         'nama_lengkap',
         'nik',
+        'nisn',
         'email',
         'no_telepon',
         'jenis_kelamin',
         'tempat_lahir',
         'tanggal_lahir',
         'alamat',
+        'nama_ayah',
+        'nama_ibu',
+        'pekerjaan_ortu',
+        'penghasilan_ortu',
         'asal_sekolah',
         'tahun_lulus',
-        'program_studi',
+        'sekolah_tujuan',
         'jalur_pendaftaran',
+        'kategori_prestasi',
+        'tingkat_prestasi',
         'status',
         'catatan',
     ];
@@ -37,6 +45,11 @@ class Pendaftar extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function dokumens(): HasMany
+    {
+        return $this->hasMany(PendaftarDokumen::class);
     }
 
     protected static function booted(): void
