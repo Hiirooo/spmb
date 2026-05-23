@@ -151,6 +151,127 @@
             position: relative;
         }
 
+        /* Native select chevron upgrade */
+        select:not(.fi-select-input-btn):not([class*="bg-"]) {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25rem;
+            padding-right: 2.5rem;
+        }
+
+        /* Textarea: minimum height + comfortable line-height */
+        textarea:not(.fi-input):not([class*="bg-"]),
+        .fi-input[rows] {
+            min-height: 5.5rem;
+            line-height: 1.55;
+            resize: vertical;
+        }
+
+        /* Filament textarea wrapper specific */
+        .fi-fo-textarea-wrp .fi-input-wrp {
+            padding: 0;
+        }
+
+        .fi-input[rows] {
+            padding: 0.75rem 0.875rem;
+        }
+
+        /* Checkbox + Radio refinement */
+        input[type="checkbox"]:not([class*="bg-"]),
+        input[type="radio"]:not([class*="bg-"]) {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 1.125rem;
+            height: 1.125rem;
+            border: 1.5px solid #cbd5e1;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 150ms ease;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        input[type="checkbox"]:not([class*="bg-"]) {
+            border-radius: 0.3125rem;
+        }
+
+        input[type="radio"]:not([class*="bg-"]) {
+            border-radius: 50%;
+        }
+
+        input[type="checkbox"]:not([class*="bg-"]):hover,
+        input[type="radio"]:not([class*="bg-"]):hover {
+            border-color: #94a3b8;
+        }
+
+        input[type="checkbox"]:not([class*="bg-"]):focus-visible,
+        input[type="radio"]:not([class*="bg-"]):focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+        }
+
+        input[type="checkbox"]:not([class*="bg-"]):checked,
+        input[type="radio"]:not([class*="bg-"]):checked {
+            background-color: #0f172a;
+            border-color: #0f172a;
+        }
+
+        input[type="checkbox"]:not([class*="bg-"]):checked::before {
+            content: '';
+            display: block;
+            width: 0.625rem;
+            height: 0.625rem;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M3.5 8.5l3 3 6-7'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+
+        input[type="radio"]:not([class*="bg-"]):checked::before {
+            content: '';
+            display: block;
+            width: 0.4375rem;
+            height: 0.4375rem;
+            border-radius: 50%;
+            background: #ffffff;
+        }
+
+        /* File input refinement (uploads) */
+        input[type="file"]::file-selector-button {
+            font-family: inherit;
+            font-weight: 600;
+            transition: background-color 150ms ease, box-shadow 150ms ease;
+            border-radius: 0.5rem;
+            border: 0;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background-color: #1e293b;
+        }
+
+        input[type="file"] {
+            font-size: 0.8125rem;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+        }
+
+        input[type="file"]:focus::file-selector-button {
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+        }
+
         /* Filament label refinement */
         .fi-fo-field-label-content {
             font-size: 0.8125rem;
@@ -186,11 +307,104 @@
             margin-bottom: 0.25rem;
         }
 
-        /* File input refinement (uploads) */
-        input[type="file"]::file-selector-button {
-            font-family: inherit;
-            font-weight: 500;
-            transition: background-color 150ms ease;
+        /* === Button refinements === */
+        button[type="submit"]:not([class*="bg-amber"]):not([class*="bg-emerald"]):not([class*="bg-rose"]),
+        a.inline-flex,
+        button.inline-flex {
+            transition: all 150ms ease;
+            letter-spacing: 0.005em;
+        }
+
+        button[type="submit"]:not(:disabled):active,
+        button.inline-flex:not(:disabled):active,
+        a.inline-flex:active {
+            transform: translateY(1px);
+        }
+
+        button:disabled,
+        button[disabled] {
+            cursor: not-allowed;
+        }
+
+        /* Filament native buttons */
+        .fi-btn {
+            transition: all 150ms ease !important;
+            letter-spacing: 0.005em;
+        }
+
+        .fi-btn:not(:disabled):active {
+            transform: translateY(1px);
+        }
+
+        /* Date picker trigger button (Filament) */
+        .fi-fo-date-time-picker-trigger {
+            cursor: pointer;
+        }
+
+        /* Date picker calendar panel */
+        .fi-fo-date-time-picker-panel {
+            border-radius: 0.625rem !important;
+            box-shadow: 0 10px 25px -5px rgba(15,23,42,0.12), 0 4px 10px -3px rgba(15,23,42,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .fi-fo-date-time-picker-calendar-day {
+            transition: all 100ms ease;
+            border-radius: 0.375rem;
+        }
+
+        .fi-fo-date-time-picker-calendar-day:hover:not(.fi-disabled) {
+            background-color: #f1f5f9;
+        }
+
+        .fi-fo-date-time-picker-calendar-day.fi-selected {
+            background-color: #0f172a !important;
+            color: #ffffff;
+        }
+
+        .fi-fo-date-time-picker-calendar-day-today {
+            font-weight: 700;
+            color: #b8860b;
+        }
+
+        /* Filament Select (custom dropdown) */
+        .fi-select-input-btn {
+            min-height: 2.5rem;
+        }
+
+        .fi-dropdown-panel {
+            border-radius: 0.625rem !important;
+            box-shadow: 0 10px 25px -5px rgba(15,23,42,0.12), 0 4px 10px -3px rgba(15,23,42,0.08) !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        /* === Card hover refinements === */
+        a.group {
+            transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 200ms ease;
+        }
+
+        /* Smooth scroll for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Improved focus visible (keyboard nav) */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid #b8860b;
+            outline-offset: 2px;
+            border-radius: 0.375rem;
+        }
+
+        /* Table row hover */
+        tbody tr {
+            transition: background-color 100ms ease;
+        }
+
+        tbody tr:hover {
+            background-color: #fafaf9;
         }
     </style>
 </head>
