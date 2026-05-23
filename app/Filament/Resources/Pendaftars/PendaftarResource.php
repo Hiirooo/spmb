@@ -72,6 +72,7 @@ class PendaftarResource extends Resource
     {
         return [
             \App\Filament\Resources\Pendaftars\RelationManagers\DokumensRelationManager::class,
+            \App\Filament\Resources\Pendaftars\RelationManagers\LogsRelationManager::class,
         ];
     }
 

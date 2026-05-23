@@ -93,11 +93,18 @@ class UploadDokumen extends Component
         $required = SpmbDokumen::requiredForJalur($pendaftar->jalur_pendaftaran);
         $existing = $pendaftar->dokumens()->get()->keyBy('jenis');
 
+        $existingMap = $existing->mapWithKeys(fn ($d, $jenis) => [$jenis => true])->all();
+        $validationErrors = SpmbDokumen::validateCompleteness(
+            $pendaftar->jalur_pendaftaran,
+            $existingMap
+        );
+
         return view('livewire.upload-dokumen', [
             'pendaftar' => $pendaftar,
             'required' => $required,
             'existing' => $existing,
             'maxSizeMb' => SpmbDokumen::MAX_SIZE_MB,
+            'validationErrors' => $validationErrors,
         ]);
     }
 }

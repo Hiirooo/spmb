@@ -6,6 +6,23 @@
         </div>
     @endif
 
+    @if(! empty($validationErrors))
+        <div class="mb-6 rounded-md border border-amber-200 bg-amber-50 px-4 py-4">
+            <p class="text-sm font-semibold text-amber-800">⚠ Persyaratan dokumen jalur {{ ucfirst($pendaftar->jalur_pendaftaran) }} belum lengkap:</p>
+            <ul class="mt-2 list-disc pl-5 space-y-1 text-sm text-amber-700">
+                @foreach($validationErrors as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @else
+        @if($existing->isNotEmpty())
+            <div class="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                ✓ Seluruh dokumen wajib jalur {{ ucfirst($pendaftar->jalur_pendaftaran) }} telah lengkap. Tunggu verifikasi tim sekolah.
+            </div>
+        @endif
+    @endif
+
     <div class="space-y-4">
         @foreach($required as $req)
             @php

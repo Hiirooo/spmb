@@ -121,4 +121,50 @@ class SpmbDokumen
     {
         return in_array($jenis, ['sktm', 'surat_disabilitas', 'sk_anak_guru', 'surat_keterangan_peringkat'], true);
     }
+
+    /**
+     * Validasi cross-field per jalur. Return array of error messages (kosong = OK).
+     *
+     * @param  array<string, mixed>  $existing  Map jenis => bool (sudah upload)
+     * @return array<int, string>
+     */
+    public static function validateCompleteness(string $jalur, array $existing): array
+    {
+        $errors = [];
+
+        if ($jalur === 'afirmasi') {
+            $hasKipKks = $existing['kip_kks_pkh'] ?? false;
+            $hasSktm = $existing['sktm'] ?? false;
+            $hasDisabilitas = $existing['surat_disabilitas'] ?? false;
+            if (! $hasKipKks && ! $hasSktm && ! $hasDisabilitas) {
+                $errors[] = 'Jalur afirmasi memerlukan minimal salah satu: Kartu KIP/KKS/PKH, atau SKTM, atau Surat Keterangan Disabilitas.';
+            }
+        }
+
+        if ($jalur === 'mutasi') {
+            $hasMutasi = $existing['sk_mutasi_ortu'] ?? false;
+            $hasAnakGuru = $existing['sk_anak_guru'] ?? false;
+            if (! $hasMutasi && ! $hasAnakGuru) {
+                $errors[] = 'Jalur mutasi memerlukan minimal salah satu: SK Mutasi Orang Tua atau SK Anak Guru.';
+            }
+        }
+
+        if ($jalur === 'prestasi') {
+            $hasSertifikat = $existing['sertifikat_prestasi'] ?? false;
+            if (! $hasSertifikat) {
+                $errors[] = 'Jalur prestasi memerlukan Sertifikat Prestasi yang sah.';
+            }
+        }
+
+        $required = collect(self::requiredForJalur($jalur))
+            ->reject(fn ($d) => self::isOptional($d['jenis'], $jalur));
+
+        foreach ($required as $req) {
+            if (empty($existing[$req['jenis']])) {
+                $errors[] = "Dokumen wajib belum diunggah: {$req['label']}.";
+            }
+        }
+
+        return $errors;
+    }
 }

@@ -28,11 +28,11 @@ class LoginForm extends Component implements HasForms
     {
         return $schema
             ->components([
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
+                TextInput::make('identifier')
+                    ->label('Email atau NISN')
                     ->required()
-                    ->autofocus(),
+                    ->autofocus()
+                    ->helperText('Login dengan email Anda, atau NISN bagi calon murid.'),
                 TextInput::make('password')
                     ->label('Password')
                     ->password()
@@ -51,17 +51,20 @@ class LoginForm extends Component implements HasForms
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
             throw ValidationException::withMessages([
-                'data.email' => 'Terlalu banyak percobaan. Coba lagi dalam '.RateLimiter::availableIn($key).' detik.',
+                'data.identifier' => 'Terlalu banyak percobaan. Coba lagi dalam '.RateLimiter::availableIn($key).' detik.',
             ]);
         }
 
+        $identifier = trim($payload['identifier']);
+        $field = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'nisn';
+
         if (! Auth::attempt([
-            'email' => $payload['email'],
+            $field => $identifier,
             'password' => $payload['password'],
         ], (bool) ($payload['remember'] ?? false))) {
             RateLimiter::hit($key);
             throw ValidationException::withMessages([
-                'data.email' => 'Email atau password salah.',
+                'data.identifier' => 'Email/NISN atau password salah.',
             ]);
         }
 

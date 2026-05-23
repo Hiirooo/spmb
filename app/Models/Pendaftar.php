@@ -78,6 +78,14 @@ class Pendaftar extends Model
 
         static::created(function (Pendaftar $pendaftar) {
             try {
+                \App\Models\PendaftarLog::create([
+                    'pendaftar_id' => $pendaftar->id,
+                    'user_id' => auth()->id() ?: $pendaftar->user_id,
+                    'action' => 'pendaftaran_dibuat',
+                    'to' => $pendaftar->status,
+                    'catatan' => 'Pendaftaran baru dibuat',
+                ]);
+
                 \Illuminate\Support\Facades\Mail::to($pendaftar->email)
                     ->send(new \App\Mail\PendaftarBaru($pendaftar));
             } catch (\Throwable $e) {
@@ -94,6 +102,17 @@ class Pendaftar extends Model
         static::updated(function (Pendaftar $pendaftar) {
             if (! empty($pendaftar->statusLama) && $pendaftar->statusLama !== $pendaftar->status) {
                 try {
+                    \App\Models\PendaftarLog::create([
+                        'pendaftar_id' => $pendaftar->id,
+                        'user_id' => auth()->id(),
+                        'action' => 'status_diubah',
+                        'subject_type' => self::class,
+                        'subject_id' => $pendaftar->id,
+                        'from' => $pendaftar->statusLama,
+                        'to' => $pendaftar->status,
+                        'catatan' => $pendaftar->catatan,
+                    ]);
+
                     \Illuminate\Support\Facades\Mail::to($pendaftar->email)
                         ->send(new \App\Mail\StatusBerubah($pendaftar, $pendaftar->statusLama));
                 } catch (\Throwable $e) {
@@ -104,4 +123,9 @@ class Pendaftar extends Model
     }
 
     public ?string $statusLama = null;
+
+    public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PendaftarLog::class)->latest();
+    }
 }

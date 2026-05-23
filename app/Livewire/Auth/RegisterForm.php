@@ -37,6 +37,13 @@ class RegisterForm extends Component implements HasForms
                     ->required()
                     ->maxLength(255)
                     ->unique(table: 'users', column: 'email'),
+                TextInput::make('nisn')
+                    ->label('NISN (10 digit, opsional)')
+                    ->length(10)
+                    ->rule('regex:/^[0-9]+$/')
+                    ->validationMessages(['regex' => 'NISN harus 10 digit angka.'])
+                    ->unique(table: 'users', column: 'nisn')
+                    ->helperText('Diisi jika sudah memiliki NISN — bisa digunakan sebagai alternatif login.'),
                 TextInput::make('password')
                     ->label('Password')
                     ->password()
@@ -61,6 +68,7 @@ class RegisterForm extends Component implements HasForms
         $user = User::create([
             'name' => $payload['name'],
             'email' => $payload['email'],
+            'nisn' => $payload['nisn'] ?? null,
             'password' => $payload['password'],
             'role' => 'pendaftar',
         ]);

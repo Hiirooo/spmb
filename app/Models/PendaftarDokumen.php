@@ -49,9 +49,36 @@ class PendaftarDokumen extends Model
 
     protected static function booted(): void
     {
+        static::created(function (PendaftarDokumen $dokumen) {
+            try {
+                \App\Models\PendaftarLog::create([
+                    'pendaftar_id' => $dokumen->pendaftar_id,
+                    'user_id' => auth()->id(),
+                    'action' => 'dokumen_diunggah',
+                    'subject_type' => self::class,
+                    'subject_id' => $dokumen->id,
+                    'to' => 'menunggu',
+                    'catatan' => $dokumen->label.' diunggah',
+                ]);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        });
+
         static::updated(function (PendaftarDokumen $dokumen) {
             if ($dokumen->wasChanged('status') && in_array($dokumen->status, ['diterima', 'ditolak'], true)) {
                 try {
+                    \App\Models\PendaftarLog::create([
+                        'pendaftar_id' => $dokumen->pendaftar_id,
+                        'user_id' => $dokumen->verified_by ?? auth()->id(),
+                        'action' => 'dokumen_diverifikasi',
+                        'subject_type' => self::class,
+                        'subject_id' => $dokumen->id,
+                        'from' => $dokumen->getOriginal('status'),
+                        'to' => $dokumen->status,
+                        'catatan' => $dokumen->label.': '.($dokumen->catatan_verifikasi ?: ''),
+                    ]);
+
                     \Illuminate\Support\Facades\Mail::to($dokumen->pendaftar->email)
                         ->send(new \App\Mail\DokumenDiverifikasi($dokumen));
                 } catch (\Throwable $e) {
