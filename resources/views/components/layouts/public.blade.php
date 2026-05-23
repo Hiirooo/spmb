@@ -343,14 +343,84 @@
 
         /* Date picker calendar panel */
         .fi-fo-date-time-picker-panel {
+            position: absolute !important;
+            z-index: 50;
+            background: #ffffff !important;
             border-radius: 0.625rem !important;
             box-shadow: 0 10px 25px -5px rgba(15,23,42,0.12), 0 4px 10px -3px rgba(15,23,42,0.08);
             border: 1px solid #e2e8f0;
+            padding: 0.875rem;
+            min-width: 18rem;
+        }
+
+        .fi-fo-date-time-picker-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .fi-fo-date-time-picker-month-select,
+        .fi-fo-date-time-picker-year-input {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 0.5rem;
+            padding: 0.375rem 0.625rem;
+            font-size: 0.8125rem;
+            color: #0f172a;
+        }
+
+        .fi-fo-date-time-picker-month-select {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.6' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1rem;
+            padding-right: 1.75rem;
+        }
+
+        .fi-fo-date-time-picker-year-input {
+            width: 5rem;
+            text-align: center;
+        }
+
+        .fi-fo-date-time-picker-calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .fi-fo-date-time-picker-calendar-header-day {
+            text-align: center;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            padding: 0.25rem 0;
+        }
+
+        .fi-fo-date-time-picker-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.125rem;
         }
 
         .fi-fo-date-time-picker-calendar-day {
             transition: all 100ms ease;
             border-radius: 0.375rem;
+            text-align: center;
+            padding: 0.5rem 0;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            color: #1e293b;
+            min-height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .fi-fo-date-time-picker-calendar-day:hover:not(.fi-disabled) {
@@ -359,7 +429,7 @@
 
         .fi-fo-date-time-picker-calendar-day.fi-selected {
             background-color: #0f172a !important;
-            color: #ffffff;
+            color: #ffffff !important;
         }
 
         .fi-fo-date-time-picker-calendar-day-today {
@@ -367,15 +437,91 @@
             color: #b8860b;
         }
 
+        .fi-fo-date-time-picker-calendar-day.fi-disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .fi-fo-date-time-picker-calendar-day.fi-focused {
+            outline: 2px solid #b8860b;
+            outline-offset: -2px;
+        }
+
         /* Filament Select (custom dropdown) */
         .fi-select-input-btn {
             min-height: 2.5rem;
         }
 
+        /* Filament dropdown panel (select, datepicker, etc.) */
         .fi-dropdown-panel {
+            position: absolute !important;
+            z-index: 50;
+            background: #ffffff !important;
             border-radius: 0.625rem !important;
             box-shadow: 0 10px 25px -5px rgba(15,23,42,0.12), 0 4px 10px -3px rgba(15,23,42,0.08) !important;
             border: 1px solid #e2e8f0 !important;
+            padding: 0.25rem !important;
+            min-width: 10rem;
+            max-height: 16rem;
+            overflow-y: auto;
+        }
+
+        .fi-dropdown-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .fi-dropdown-list-item {
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 100ms ease;
+            color: #1e293b;
+            display: block;
+        }
+
+        .fi-dropdown-list-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .fi-dropdown-list-item.fi-selected,
+        .fi-dropdown-list-item[aria-selected="true"] {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .fi-dropdown-list-item.fi-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Filament select trigger button visual */
+        .fi-select-input-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            text-align: left;
+            color: #0f172a;
+            cursor: pointer;
+        }
+
+        .fi-select-input-btn[aria-expanded="true"] {
+            background: rgba(15,23,42,0.02);
+        }
+
+        /* Date picker reveal/clear icon button inside trigger */
+        .fi-icon-btn {
+            transition: background-color 150ms ease;
+        }
+
+        .fi-icon-btn:hover {
+            background-color: #f1f5f9;
+            border-radius: 0.375rem;
         }
 
         /* === Card hover refinements === */
