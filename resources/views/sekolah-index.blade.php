@@ -17,14 +17,20 @@
         </div>
 
         <form method="GET" class="mt-8 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-            <input type="text" name="q" value="{{ $q }}" placeholder="Cari nama sekolah / NPSN..." class="rounded-md border-ink-300 bg-white px-4 py-2.5 text-sm placeholder:text-ink-400 focus:border-ink-900 focus:ring-ink-900" />
-            <select name="kab" class="rounded-md border-ink-300 bg-white px-4 py-2.5 text-sm focus:border-ink-900 focus:ring-ink-900">
+            <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-400">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                </span>
+                <input type="text" name="q" value="{{ $q }}" placeholder="Cari nama sekolah, NPSN, atau wilayah..."
+                    class="w-full rounded-lg border-ink-200 bg-white py-2.5 pl-10 pr-4 text-sm text-ink-900 shadow-soft placeholder:text-ink-400 focus:border-ink-900 focus:shadow-[0_0_0_3px_rgba(184,134,11,0.15)] focus:ring-0" />
+            </div>
+            <select name="kab" class="rounded-lg border-ink-200 bg-white px-4 py-2.5 text-sm text-ink-900 shadow-soft focus:border-ink-900 focus:shadow-[0_0_0_3px_rgba(184,134,11,0.15)] focus:ring-0">
                 <option value="">Semua Kab/Kota</option>
                 @foreach($kabupatens as $kabName)
                     <option value="{{ $kabName }}" @selected($kab === $kabName)>{{ $kabName }}</option>
                 @endforeach
             </select>
-            <button type="submit" class="rounded-md bg-ink-900 px-5 py-2.5 text-sm font-semibold text-paper hover:bg-ink-800">Cari</button>
+            <button type="submit" class="rounded-lg bg-ink-900 px-6 py-2.5 text-sm font-semibold text-paper shadow-soft hover:bg-ink-800 transition">Cari</button>
         </form>
 
         @if($sekolahs->isEmpty())

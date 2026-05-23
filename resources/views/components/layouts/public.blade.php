@@ -44,6 +44,154 @@
         .gold-line {
             background: linear-gradient(90deg, transparent, #b8860b 20%, #b8860b 80%, transparent);
         }
+
+        /* === Form input refinement (Filament inputs + native form fields) === */
+        .fi-input,
+        .fi-select-input-btn,
+        .fi-input-wrp,
+        input[type="text"]:not(.fi-input):not([class*="bg-"]),
+        input[type="email"]:not(.fi-input):not([class*="bg-"]),
+        input[type="password"]:not(.fi-input):not([class*="bg-"]),
+        input[type="tel"]:not(.fi-input):not([class*="bg-"]),
+        input[type="number"]:not(.fi-input):not([class*="bg-"]),
+        input[type="search"]:not(.fi-input):not([class*="bg-"]),
+        select:not(.fi-select-input-btn):not([class*="bg-"]),
+        textarea:not(.fi-input):not([class*="bg-"]) {
+            border-radius: 0.5rem;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        /* Filament input wrapper (border container) */
+        .fi-input-wrp {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px 0 rgba(15,23,42,0.04);
+        }
+
+        .fi-input-wrp:hover {
+            border-color: #cbd5e1;
+        }
+
+        .fi-input-wrp:focus-within {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.15), 0 1px 2px 0 rgba(15,23,42,0.04);
+        }
+
+        .fi-input-wrp.fi-invalid,
+        .fi-input-wrp[aria-invalid="true"] {
+            border-color: #f43f5e;
+        }
+
+        .fi-input-wrp.fi-invalid:focus-within {
+            box-shadow: 0 0 0 3px rgba(244,63,94,0.15);
+        }
+
+        /* Inner input itself: remove its default border/ring (wrapper handles it) */
+        .fi-input,
+        .fi-select-input-btn {
+            border: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            padding: 0.625rem 0.875rem;
+            color: #0f172a;
+            outline: none !important;
+        }
+
+        .fi-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .fi-input:focus,
+        .fi-select-input-btn:focus {
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* Native (non-Filament) inputs */
+        input[type="text"]:not(.fi-input):not([class*="bg-"]),
+        input[type="email"]:not(.fi-input):not([class*="bg-"]),
+        input[type="password"]:not(.fi-input):not([class*="bg-"]),
+        input[type="tel"]:not(.fi-input):not([class*="bg-"]),
+        input[type="number"]:not(.fi-input):not([class*="bg-"]),
+        input[type="search"]:not(.fi-input):not([class*="bg-"]),
+        select:not(.fi-select-input-btn):not([class*="bg-"]),
+        textarea:not(.fi-input):not([class*="bg-"]) {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            padding: 0.625rem 0.875rem;
+            color: #0f172a;
+            box-shadow: 0 1px 2px 0 rgba(15,23,42,0.04);
+        }
+
+        input[type="text"]:not(.fi-input):not([class*="bg-"]):hover,
+        input[type="email"]:not(.fi-input):not([class*="bg-"]):hover,
+        select:not(.fi-select-input-btn):not([class*="bg-"]):hover,
+        textarea:not(.fi-input):not([class*="bg-"]):hover {
+            border-color: #cbd5e1;
+        }
+
+        input[type="text"]:not(.fi-input):not([class*="bg-"]):focus,
+        input[type="email"]:not(.fi-input):not([class*="bg-"]):focus,
+        input[type="password"]:not(.fi-input):not([class*="bg-"]):focus,
+        input[type="tel"]:not(.fi-input):not([class*="bg-"]):focus,
+        input[type="number"]:not(.fi-input):not([class*="bg-"]):focus,
+        input[type="search"]:not(.fi-input):not([class*="bg-"]):focus,
+        select:not(.fi-select-input-btn):not([class*="bg-"]):focus,
+        textarea:not(.fi-input):not([class*="bg-"]):focus {
+            border-color: #0f172a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+        }
+
+        /* Select dropdown chevron */
+        .fi-select-input {
+            position: relative;
+        }
+
+        /* Filament label refinement */
+        .fi-fo-field-label-content {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.005em;
+        }
+
+        .fi-fo-field-label-required-mark {
+            color: #b8860b;
+            margin-left: 2px;
+        }
+
+        /* Field hint/helper text */
+        .fi-fo-field-wrp-hint {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.375rem;
+            line-height: 1.4;
+        }
+
+        /* Validation error message */
+        .fi-fo-field-wrp-error-message,
+        p[data-validation-error] {
+            font-size: 0.75rem;
+            color: #e11d48;
+            margin-top: 0.375rem;
+            font-weight: 500;
+        }
+
+        /* Spacing between fields */
+        .fi-sc-section-content > .fi-grid > .fi-grid-col > .fi-sc-component {
+            margin-bottom: 0.25rem;
+        }
+
+        /* File input refinement (uploads) */
+        input[type="file"]::file-selector-button {
+            font-family: inherit;
+            font-weight: 500;
+            transition: background-color 150ms ease;
+        }
     </style>
 </head>
 <body class="min-h-full bg-paper text-ink-900 antialiased">
