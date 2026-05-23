@@ -66,13 +66,17 @@ class Pendaftar extends Model
                 $sekolah = $pendaftar->sekolah_id
                     ? \App\Models\Sekolah::find($pendaftar->sekolah_id)
                     : null;
-                $prefix = $sekolah
-                    ? strtoupper(substr(preg_replace('/[^A-Z]/i', '', $sekolah->nama), 0, 4))
-                    : 'SPMB';
+                // Prefix: 4-char sekolah + 4-digit NPSN suffix to keep uniqueness across sekolah dengan nama mirip
+                $prefix = 'SPMB';
+                if ($sekolah) {
+                    $abbr = strtoupper(substr(preg_replace('/[^A-Z]/i', '', $sekolah->nama), 0, 4)) ?: 'SPMB';
+                    $npsnTail = substr($sekolah->npsn ?? '', -4) ?: str_pad((string) $sekolah->id, 4, '0', STR_PAD_LEFT);
+                    $prefix = "{$abbr}{$npsnTail}";
+                }
                 $count = static::whereYear('created_at', $year)
                     ->when($pendaftar->sekolah_id, fn ($q) => $q->where('sekolah_id', $pendaftar->sekolah_id))
                     ->count() + 1;
-                $pendaftar->nomor_pendaftaran = sprintf('%s-%s-%05d', $prefix ?: 'SPMB', $year, $count);
+                $pendaftar->nomor_pendaftaran = sprintf('%s-%s-%05d', $prefix, $year, $count);
             }
         });
 

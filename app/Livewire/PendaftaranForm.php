@@ -5,28 +5,38 @@ namespace App\Livewire;
 use App\Models\Pendaftar;
 use App\Models\Sekolah;
 use App\Support\SpmbDokumen;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
-class PendaftaranForm extends Component implements HasForms
+class PendaftaranForm extends Component
 {
-    use InteractsWithForms;
-
-    public ?array $data = [];
-
     public Sekolah $sekolah;
 
     public ?string $jalurPreset = null;
+
+    public string $nama_lengkap = '';
+    public string $nisn = '';
+    public string $nik = '';
+    public string $jenis_kelamin = '';
+    public string $tempat_lahir = '';
+    public string $tanggal_lahir = '';
+    public string $alamat = '';
+
+    public string $nama_ayah = '';
+    public string $nama_ibu = '';
+    public string $pekerjaan_ortu = '';
+    public string $penghasilan_ortu = '';
+
+    public string $email = '';
+    public string $no_telepon = '';
+
+    public string $asal_sekolah = '';
+    public ?int $tahun_lulus = null;
+
+    public string $jalur_pendaftaran = '';
+    public string $kategori_prestasi = '';
+    public string $tingkat_prestasi = '';
 
     public function mount(Sekolah $sekolah, ?string $jalur = null): void
     {
@@ -34,183 +44,114 @@ class PendaftaranForm extends Component implements HasForms
         $this->jalurPreset = $jalur && array_key_exists($jalur, SpmbDokumen::JALUR) ? $jalur : null;
 
         $user = Auth::user();
-
-        $this->form->fill([
-            'nama_lengkap' => $user?->name,
-            'email' => $user?->email,
-            'sekolah_tujuan' => $sekolah->nama,
-            'jalur_pendaftaran' => $this->jalurPreset,
-        ]);
+        $this->nama_lengkap = $user?->name ?? '';
+        $this->email = $user?->email ?? '';
+        $this->nisn = $user?->nisn ?? '';
+        $this->jalur_pendaftaran = $this->jalurPreset ?? '';
+        $this->tahun_lulus = (int) now()->format('Y');
     }
 
-    public function form(Schema $schema): Schema
+    protected function rules(): array
     {
-        return $schema
-            ->components([
-                Section::make('Identitas Calon Murid')
-                    ->description('Data pribadi sesuai Kartu Keluarga & Akta Kelahiran')
-                    ->columns(2)
-                    ->components([
-                        TextInput::make('nama_lengkap')
-                            ->label('Nama Lengkap')
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-                        TextInput::make('nisn')
-                            ->label('NISN')
-                            ->required()
-                            ->length(10)
-                            ->rule('regex:/^[0-9]+$/')
-                            ->validationMessages(['regex' => 'NISN harus berupa 10 digit angka.']),
-                        TextInput::make('nik')
-                            ->label('NIK')
-                            ->required()
-                            ->length(16)
-                            ->rule('regex:/^[0-9]+$/')
-                            ->validationMessages(['regex' => 'NIK harus berupa 16 digit angka.'])
-                            ->unique(table: 'pendaftars', column: 'nik'),
-                        Select::make('jenis_kelamin')
-                            ->label('Jenis Kelamin')
-                            ->options(['L' => 'Laki-laki', 'P' => 'Perempuan'])
-                            ->required()
-                            ->native(false),
-                        TextInput::make('tempat_lahir')
-                            ->label('Tempat Lahir')
-                            ->required(),
-                        DatePicker::make('tanggal_lahir')
-                            ->label('Tanggal Lahir')
-                            ->required()
-                            ->native(false)
-                            ->maxDate(now()->subYears(12)),
-                        Textarea::make('alamat')
-                            ->label('Alamat Lengkap (sesuai KK)')
-                            ->required()
-                            ->rows(3)
-                            ->columnSpanFull(),
-                    ]),
+        $maxBirth = now()->subYears(12)->format('Y-m-d');
+        $year = (int) now()->format('Y');
 
-                Section::make('Data Orang Tua / Wali')
-                    ->columns(2)
-                    ->components([
-                        TextInput::make('nama_ayah')
-                            ->label('Nama Ayah')
-                            ->required(),
-                        TextInput::make('nama_ibu')
-                            ->label('Nama Ibu')
-                            ->required(),
-                        TextInput::make('pekerjaan_ortu')
-                            ->label('Pekerjaan Orang Tua / Wali')
-                            ->required(),
-                        Select::make('penghasilan_ortu')
-                            ->label('Penghasilan Bulanan Orang Tua')
-                            ->options([
-                                '< 1 juta' => 'Kurang dari Rp 1.000.000',
-                                '1-3 juta' => 'Rp 1.000.000 – Rp 3.000.000',
-                                '3-5 juta' => 'Rp 3.000.000 – Rp 5.000.000',
-                                '5-10 juta' => 'Rp 5.000.000 – Rp 10.000.000',
-                                '> 10 juta' => 'Lebih dari Rp 10.000.000',
-                            ])
-                            ->required()
-                            ->native(false),
-                    ]),
+        return [
+            'nama_lengkap' => ['required', 'string', 'max:255'],
+            'nisn' => ['required', 'string', 'size:10', 'regex:/^[0-9]+$/'],
+            'nik' => ['required', 'string', 'size:16', 'regex:/^[0-9]+$/', 'unique:pendaftars,nik'],
+            'jenis_kelamin' => ['required', 'in:L,P'],
+            'tempat_lahir' => ['required', 'string', 'max:120'],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:'.$maxBirth],
+            'alamat' => ['required', 'string', 'min:10', 'max:500'],
 
-                Section::make('Kontak')
-                    ->columns(2)
-                    ->components([
-                        TextInput::make('email')
-                            ->label('Email')
-                            ->email()
-                            ->required()
-                            ->unique(table: 'pendaftars', column: 'email'),
-                        TextInput::make('no_telepon')
-                            ->label('Nomor WhatsApp Aktif')
-                            ->tel()
-                            ->required()
-                            ->maxLength(20),
-                    ]),
+            'nama_ayah' => ['required', 'string', 'max:120'],
+            'nama_ibu' => ['required', 'string', 'max:120'],
+            'pekerjaan_ortu' => ['required', 'string', 'max:120'],
+            'penghasilan_ortu' => ['required', 'in:< 1 juta,1-3 juta,3-5 juta,5-10 juta,> 10 juta'],
 
-                Section::make('Asal Sekolah')
-                    ->columns(2)
-                    ->components([
-                        TextInput::make('asal_sekolah')
-                            ->label('Asal SMP / Sederajat')
-                            ->required()
-                            ->columnSpanFull(),
-                        TextInput::make('tahun_lulus')
-                            ->label('Tahun Lulus')
-                            ->numeric()
-                            ->required()
-                            ->minValue(2020)
-                            ->maxValue((int) now()->format('Y')),
-                    ]),
+            'email' => ['required', 'email', 'max:255', 'unique:pendaftars,email'],
+            'no_telepon' => ['required', 'string', 'max:20', 'regex:/^[0-9+\-\s]+$/'],
 
-                Section::make('Pilihan Pendaftaran')
-                    ->description('Sesuai Juknis SPMB SMA Negeri Provinsi Sumsel TA 2026/2027')
-                    ->columns(2)
-                    ->components([
-                        Select::make('jalur_pendaftaran')
-                            ->label('Jalur Pendaftaran')
-                            ->options(function (): array {
-                                $penuh = $this->sekolah->jalurPenuhList();
-                                $opts = [];
-                                foreach (SpmbDokumen::JALUR as $key => $label) {
-                                    $opts[$key] = in_array($key, $penuh, true)
-                                        ? $label.' (Kuota Penuh)'
-                                        : $label;
-                                }
-                                return $opts;
-                            })
-                            ->disableOptionWhen(fn (string $value): bool => $this->sekolah->isJalurPenuh($value))
-                            ->required()
-                            ->live()
-                            ->native(false)
-                            ->helperText('Hanya boleh memilih satu jalur. Jalur yang kuotanya penuh tidak dapat dipilih.'),
-                        TextInput::make('sekolah_tujuan')
-                            ->label('Sekolah Tujuan')
-                            ->disabled()
-                            ->dehydrated(),
-                        Select::make('kategori_prestasi')
-                            ->label('Kategori Prestasi')
-                            ->options(SpmbDokumen::KATEGORI_PRESTASI)
-                            ->required()
-                            ->native(false)
-                            ->visible(fn (Get $get): bool => $get('jalur_pendaftaran') === 'prestasi'),
-                        Select::make('tingkat_prestasi')
-                            ->label('Tingkat Prestasi')
-                            ->options(SpmbDokumen::TINGKAT_PRESTASI)
-                            ->required()
-                            ->native(false)
-                            ->visible(fn (Get $get): bool => $get('jalur_pendaftaran') === 'prestasi' && $get('kategori_prestasi') === 'non_akademik'),
-                    ]),
-            ])
-            ->statePath('data');
+            'asal_sekolah' => ['required', 'string', 'max:255'],
+            'tahun_lulus' => ['required', 'integer', 'min:2020', 'max:'.$year],
+
+            'jalur_pendaftaran' => ['required', 'in:'.implode(',', array_keys(SpmbDokumen::JALUR))],
+            'kategori_prestasi' => ['required_if:jalur_pendaftaran,prestasi', 'nullable', 'in:'.implode(',', array_keys(SpmbDokumen::KATEGORI_PRESTASI))],
+            'tingkat_prestasi' => ['required_if:kategori_prestasi,non_akademik', 'nullable', 'in:'.implode(',', array_keys(SpmbDokumen::TINGKAT_PRESTASI))],
+        ];
     }
 
-    public function submit(): mixed
+    protected function messages(): array
     {
-        $payload = $this->form->getState();
+        return [
+            'required' => 'Wajib diisi.',
+            'required_if' => 'Wajib diisi.',
+            'email' => 'Format email tidak valid.',
+            'max' => 'Maksimal :max karakter.',
+            'min' => 'Minimal :min karakter.',
+            'size' => 'Harus tepat :size karakter.',
+            'regex' => 'Format tidak valid.',
+            'unique' => 'Sudah terdaftar di sistem.',
+            'in' => 'Pilihan tidak valid.',
+            'date' => 'Tanggal tidak valid.',
+            'before_or_equal' => 'Tanggal lahir tidak valid (minimal usia 12 tahun).',
+            'integer' => 'Harus berupa angka.',
+            'nisn.regex' => 'NISN harus 10 digit angka.',
+            'nik.regex' => 'NIK harus 16 digit angka.',
+            'no_telepon.regex' => 'Format telepon tidak valid.',
+        ];
+    }
 
-        if ($this->sekolah->isJalurPenuh($payload['jalur_pendaftaran'])) {
-            Notification::make()
-                ->title('Kuota jalur '.$payload['jalur_pendaftaran'].' telah penuh')
-                ->body('Silakan pilih jalur lain atau cek rekomendasi ulang.')
-                ->danger()
-                ->send();
+    public function updatedJalurPendaftaran(): void
+    {
+        if ($this->jalur_pendaftaran !== 'prestasi') {
+            $this->kategori_prestasi = '';
+            $this->tingkat_prestasi = '';
+        }
+    }
+
+    public function updatedKategoriPrestasi(): void
+    {
+        if ($this->kategori_prestasi !== 'non_akademik') {
+            $this->tingkat_prestasi = '';
+        }
+    }
+
+    #[Computed]
+    public function jalurOptions(): array
+    {
+        $penuh = $this->sekolah->jalurPenuhList();
+        $opts = [];
+        foreach (SpmbDokumen::JALUR as $key => $label) {
+            $opts[] = [
+                'value' => $key,
+                'label' => $label,
+                'penuh' => in_array($key, $penuh, true),
+            ];
+        }
+        return $opts;
+    }
+
+    public function submit()
+    {
+        $data = $this->validate();
+
+        if ($this->sekolah->isJalurPenuh($data['jalur_pendaftaran'])) {
+            $this->addError('jalur_pendaftaran', 'Kuota jalur '.$data['jalur_pendaftaran'].' telah penuh.');
             return null;
         }
 
-        $payload['status'] = 'baru';
-        $payload['user_id'] = Auth::id();
-        $payload['sekolah_id'] = $this->sekolah->id;
-        $payload['sekolah_tujuan'] = $this->sekolah->nama;
+        $payload = $data + [
+            'status' => 'baru',
+            'user_id' => Auth::id(),
+            'sekolah_id' => $this->sekolah->id,
+            'sekolah_tujuan' => $this->sekolah->nama,
+        ];
 
-        $pendaftar = Pendaftar::create($payload);
+        Pendaftar::create($payload);
 
-        Notification::make()
-            ->title('Pendaftaran berhasil!')
-            ->body('Lanjutkan dengan mengunggah dokumen persyaratan.')
-            ->success()
-            ->send();
+        session()->flash('flash-success', 'Pendaftaran berhasil! Lanjutkan dengan mengunggah dokumen.');
 
         return redirect()->route('portal.dokumen');
     }

@@ -117,6 +117,7 @@
         input[type="tel"]:not(.fi-input):not([class*="bg-"]),
         input[type="number"]:not(.fi-input):not([class*="bg-"]),
         input[type="search"]:not(.fi-input):not([class*="bg-"]),
+        input[type="date"]:not(.fi-input):not([class*="bg-"]),
         select:not(.fi-select-input-btn):not([class*="bg-"]),
         textarea:not(.fi-input):not([class*="bg-"]) {
             border: 1px solid #e2e8f0;
@@ -124,6 +125,33 @@
             padding: 0.625rem 0.875rem;
             color: #0f172a;
             box-shadow: 0 1px 2px 0 rgba(15,23,42,0.04);
+        }
+
+        /* Date input picker indicator */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 150ms ease;
+            filter: invert(0.4);
+        }
+
+        input[type="date"]:hover::-webkit-calendar-picker-indicator {
+            opacity: 1;
+        }
+
+        input[type="date"]:focus::-webkit-calendar-picker-indicator {
+            opacity: 1;
+            filter: invert(0.2);
+        }
+
+        /* Hide arrows on number input - cleaner look */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
 
         input[type="text"]:not(.fi-input):not([class*="bg-"]):hover,
