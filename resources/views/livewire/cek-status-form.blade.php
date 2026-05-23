@@ -1,18 +1,26 @@
 <div>
     @if(! $pendaftar && ! $notFound)
-        <form wire:submit="submit" class="space-y-6">
-            {{ $this->form }}
+        <form wire:submit="submit" class="space-y-5">
+            <x-spmb.input
+                name="nomor_pendaftaran"
+                label="Nomor Pendaftaran"
+                placeholder="Mis: SMAN5001-2026-00001"
+                :required="true"
+                :autofocus="true"
+                mono
+            />
 
-            <button type="submit"
-                class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-ink-900 px-6 py-3 text-sm font-semibold text-paper shadow-soft hover:bg-ink-800 disabled:opacity-50"
-                wire:loading.attr="disabled"
-                wire:target="submit">
-                <svg wire:loading wire:target="submit" class="-ml-1 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
-                Cek Status
-            </button>
+            <x-spmb.input
+                name="nik"
+                label="NIK (16 digit)"
+                placeholder="Sesuai Kartu Keluarga"
+                inputmode="numeric"
+                maxlength="16"
+                :required="true"
+                mono
+            />
+
+            <x-spmb.submit target="submit" label="Cek Status" :fullWidth="true" />
         </form>
     @elseif($notFound)
         <div class="text-center py-6">
@@ -21,7 +29,7 @@
             </div>
             <h3 class="mt-4 font-serif text-xl font-semibold text-ink-900">Data tidak ditemukan</h3>
             <p class="mt-2 text-sm text-ink-500">Nomor pendaftaran dan NIK tidak cocok. Periksa kembali atau hubungi admin sekolah.</p>
-            <button wire:click="reset_form" class="mt-6 inline-flex items-center gap-2 rounded-md border border-ink-300 px-4 py-2 text-sm font-medium text-ink-700 hover:bg-paper">Coba Lagi</button>
+            <button wire:click="reset_form" class="mt-6 inline-flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-medium text-ink-700 shadow-soft hover:bg-paper">Coba Lagi</button>
         </div>
     @else
         @php
@@ -86,7 +94,7 @@
                 </div>
             @endif
 
-            <button wire:click="reset_form" class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-ink-300 px-4 py-2.5 text-sm font-medium text-ink-700 hover:bg-paper">
+            <button wire:click="reset_form" class="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-sm font-medium text-ink-700 shadow-soft hover:bg-paper">
                 Cek Nomor Lain
             </button>
         </div>

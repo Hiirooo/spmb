@@ -3,78 +3,55 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
 
-class RegisterForm extends Component implements HasForms
+class RegisterForm extends Component
 {
-    use InteractsWithForms;
+    public string $name = '';
+    public string $email = '';
+    public string $nisn = '';
+    public string $password = '';
+    public string $password_confirmation = '';
 
-    public ?array $data = [];
-
-    public function mount(): void
+    protected function rules(): array
     {
-        $this->form->fill();
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'nisn' => ['nullable', 'string', 'size:10', 'regex:/^[0-9]+$/', 'unique:users,nisn'],
+            'password' => ['required', 'confirmed', Password::min(8)],
+        ];
     }
 
-    public function form(Schema $schema): Schema
+    protected function messages(): array
     {
-        return $schema
-            ->components([
-                TextInput::make('name')
-                    ->label('Nama Lengkap')
-                    ->required()
-                    ->maxLength(255)
-                    ->autofocus(),
-                TextInput::make('email')
-                    ->label('Email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(table: 'users', column: 'email'),
-                TextInput::make('nisn')
-                    ->label('NISN (10 digit, opsional)')
-                    ->length(10)
-                    ->rule('regex:/^[0-9]+$/')
-                    ->validationMessages(['regex' => 'NISN harus 10 digit angka.'])
-                    ->unique(table: 'users', column: 'nisn')
-                    ->helperText('Diisi jika sudah memiliki NISN — bisa digunakan sebagai alternatif login.'),
-                TextInput::make('password')
-                    ->label('Password')
-                    ->password()
-                    ->required()
-                    ->rule(Password::min(8))
-                    ->revealable(),
-                TextInput::make('password_confirmation')
-                    ->label('Konfirmasi Password')
-                    ->password()
-                    ->required()
-                    ->same('password')
-                    ->revealable()
-                    ->dehydrated(false),
-            ])
-            ->statePath('data');
+        return [
+            'required' => 'Wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'nisn.size' => 'NISN harus 10 digit.',
+            'nisn.regex' => 'NISN harus berupa angka.',
+            'nisn.unique' => 'NISN sudah terdaftar.',
+            'password.confirmed' => 'Konfirmasi password tidak sama.',
+            'password.min' => 'Password minimal :min karakter.',
+        ];
     }
 
     public function submit(): mixed
     {
-        $payload = $this->form->getState();
+        $data = $this->validate();
 
         $user = User::create([
-            'name' => $payload['name'],
-            'email' => $payload['email'],
-            'nisn' => $payload['nisn'] ?? null,
-            'password' => $payload['password'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'nisn' => $data['nisn'] ?: null,
+            'password' => $data['password'],
             'role' => 'pendaftar',
         ]);
 
         Auth::login($user, remember: true);
-
         session()->regenerate();
 
         return redirect()->route('portal');

@@ -1,26 +1,25 @@
 <div>
-    <form wire:submit="submit" class="space-y-6">
-        {{ $this->form }}
+    <form wire:submit="submit" class="space-y-5">
+        <x-spmb.input
+            name="identifier"
+            label="Email atau NISN"
+            placeholder="nama@contoh.com atau 0012345678"
+            :required="true"
+            autocomplete="username"
+            :autofocus="true"
+            hint="Login dengan email Anda, atau NISN bagi calon murid."
+        />
 
-        <button
-            type="submit"
-            class="group inline-flex w-full items-center justify-center gap-2 rounded-md bg-ink-900 px-6 py-3 text-sm font-semibold text-paper shadow-soft hover:bg-ink-800 disabled:opacity-50"
-            wire:loading.attr="disabled"
-            wire:target="submit"
-        >
-            <svg
-                wire:loading
-                wire:target="submit"
-                class="-ml-1 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-            </svg>
-            <span>Masuk</span>
-        </button>
+        <x-spmb.input
+            name="password"
+            label="Password"
+            type="password"
+            :required="true"
+            autocomplete="current-password"
+        />
+
+        <x-spmb.checkbox name="remember" label="Ingat saya" />
+
+        <x-spmb.submit target="submit" label="Masuk" :fullWidth="true" />
     </form>
-
-    <x-filament-actions::modals />
 </div>

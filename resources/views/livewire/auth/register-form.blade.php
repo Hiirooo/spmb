@@ -1,26 +1,52 @@
 <div>
-    <form wire:submit="submit" class="space-y-6">
-        {{ $this->form }}
+    <form wire:submit="submit" class="space-y-5">
+        <x-spmb.input
+            name="name"
+            label="Nama Lengkap"
+            placeholder="Sesuai akta kelahiran"
+            :required="true"
+            autocomplete="name"
+            :autofocus="true"
+            maxlength="255"
+        />
 
-        <button
-            type="submit"
-            class="group inline-flex w-full items-center justify-center gap-2 rounded-md bg-ink-900 px-6 py-3 text-sm font-semibold text-paper shadow-soft hover:bg-ink-800 disabled:opacity-50"
-            wire:loading.attr="disabled"
-            wire:target="submit"
-        >
-            <svg
-                wire:loading
-                wire:target="submit"
-                class="-ml-1 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-            </svg>
-            <span>Buat Akun</span>
-        </button>
+        <x-spmb.input
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="nama@contoh.com"
+            :required="true"
+            autocomplete="email"
+            maxlength="255"
+        />
+
+        <x-spmb.input
+            name="nisn"
+            label="NISN (opsional)"
+            placeholder="10 digit"
+            inputmode="numeric"
+            maxlength="10"
+            mono
+            hint="Diisi jika sudah memiliki NISN — bisa digunakan sebagai alternatif login."
+        />
+
+        <x-spmb.input
+            name="password"
+            label="Password"
+            type="password"
+            :required="true"
+            autocomplete="new-password"
+            hint="Minimal 8 karakter."
+        />
+
+        <x-spmb.input
+            name="password_confirmation"
+            label="Konfirmasi Password"
+            type="password"
+            :required="true"
+            autocomplete="new-password"
+        />
+
+        <x-spmb.submit target="submit" label="Buat Akun" :fullWidth="true" />
     </form>
-
-    <x-filament-actions::modals />
 </div>

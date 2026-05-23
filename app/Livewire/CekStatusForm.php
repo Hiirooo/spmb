@@ -3,46 +3,33 @@
 namespace App\Livewire;
 
 use App\Models\Pendaftar;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
-class CekStatusForm extends Component implements HasForms
+class CekStatusForm extends Component
 {
-    use InteractsWithForms;
-
-    public ?array $data = [];
+    public string $nomor_pendaftaran = '';
+    public string $nik = '';
 
     public ?Pendaftar $pendaftar = null;
-
     public bool $notFound = false;
 
-    public function mount(): void
+    protected function rules(): array
     {
-        $this->form->fill();
+        return [
+            'nomor_pendaftaran' => ['required', 'string', 'max:50'],
+            'nik' => ['required', 'string', 'size:16', 'regex:/^[0-9]+$/'],
+        ];
     }
 
-    public function form(Schema $schema): Schema
+    protected function messages(): array
     {
-        return $schema
-            ->components([
-                TextInput::make('nomor_pendaftaran')
-                    ->label('Nomor Pendaftaran')
-                    ->placeholder('Misal: SMAN-2026-00001')
-                    ->required()
-                    ->autofocus(),
-                TextInput::make('nik')
-                    ->label('NIK (16 digit)')
-                    ->required()
-                    ->length(16)
-                    ->rule('regex:/^[0-9]+$/')
-                    ->validationMessages(['regex' => 'NIK harus 16 digit angka.']),
-            ])
-            ->statePath('data');
+        return [
+            'required' => 'Wajib diisi.',
+            'nik.size' => 'NIK harus 16 digit.',
+            'nik.regex' => 'NIK harus berupa angka.',
+        ];
     }
 
     public function submit(): void
@@ -50,16 +37,16 @@ class CekStatusForm extends Component implements HasForms
         $key = 'cek-status.'.request()->ip();
         if (RateLimiter::tooManyAttempts($key, 10)) {
             throw ValidationException::withMessages([
-                'data.nomor_pendaftaran' => 'Terlalu banyak percobaan. Coba lagi dalam '.RateLimiter::availableIn($key).' detik.',
+                'nomor_pendaftaran' => 'Terlalu banyak percobaan. Coba lagi dalam '.RateLimiter::availableIn($key).' detik.',
             ]);
         }
         RateLimiter::hit($key);
 
-        $payload = $this->form->getState();
+        $data = $this->validate();
 
         $this->pendaftar = Pendaftar::query()
-            ->where('nomor_pendaftaran', $payload['nomor_pendaftaran'])
-            ->where('nik', $payload['nik'])
+            ->where('nomor_pendaftaran', $data['nomor_pendaftaran'])
+            ->where('nik', $data['nik'])
             ->with(['sekolah', 'dokumens'])
             ->first();
 
@@ -70,7 +57,9 @@ class CekStatusForm extends Component implements HasForms
     {
         $this->pendaftar = null;
         $this->notFound = false;
-        $this->form->fill();
+        $this->nomor_pendaftaran = '';
+        $this->nik = '';
+        $this->resetErrorBag();
     }
 
     public function render()

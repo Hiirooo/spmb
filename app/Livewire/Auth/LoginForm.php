@@ -2,69 +2,54 @@
 
 namespace App\Livewire\Auth;
 
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-class LoginForm extends Component implements HasForms
+class LoginForm extends Component
 {
-    use InteractsWithForms;
+    public string $identifier = '';
+    public string $password = '';
+    public bool $remember = false;
 
-    public ?array $data = [];
-
-    public function mount(): void
+    protected function rules(): array
     {
-        $this->form->fill();
+        return [
+            'identifier' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'min:1'],
+            'remember' => ['boolean'],
+        ];
     }
 
-    public function form(Schema $schema): Schema
+    protected function messages(): array
     {
-        return $schema
-            ->components([
-                TextInput::make('identifier')
-                    ->label('Email atau NISN')
-                    ->required()
-                    ->autofocus()
-                    ->helperText('Login dengan email Anda, atau NISN bagi calon murid.'),
-                TextInput::make('password')
-                    ->label('Password')
-                    ->password()
-                    ->required()
-                    ->revealable(),
-                Checkbox::make('remember')
-                    ->label('Ingat saya'),
-            ])
-            ->statePath('data');
+        return [
+            'required' => 'Wajib diisi.',
+        ];
     }
 
     public function submit(): mixed
     {
-        $payload = $this->form->getState();
-        $key = 'login.'.request()->ip();
+        $data = $this->validate();
 
+        $key = 'login.'.request()->ip();
         if (RateLimiter::tooManyAttempts($key, 5)) {
             throw ValidationException::withMessages([
-                'data.identifier' => 'Terlalu banyak percobaan. Coba lagi dalam '.RateLimiter::availableIn($key).' detik.',
+                'identifier' => 'Terlalu banyak percobaan. Coba lagi dalam '.RateLimiter::availableIn($key).' detik.',
             ]);
         }
 
-        $identifier = trim($payload['identifier']);
+        $identifier = trim($data['identifier']);
         $field = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'nisn';
 
         if (! Auth::attempt([
             $field => $identifier,
-            'password' => $payload['password'],
-        ], (bool) ($payload['remember'] ?? false))) {
+            'password' => $data['password'],
+        ], (bool) ($data['remember'] ?? false))) {
             RateLimiter::hit($key);
             throw ValidationException::withMessages([
-                'data.identifier' => 'Email/NISN atau password salah.',
+                'identifier' => 'Email/NISN atau password salah.',
             ]);
         }
 
@@ -72,7 +57,6 @@ class LoginForm extends Component implements HasForms
         session()->regenerate();
 
         $user = Auth::user();
-
         return redirect()->intended($user->isAdmin() ? '/admin' : route('portal'));
     }
 
