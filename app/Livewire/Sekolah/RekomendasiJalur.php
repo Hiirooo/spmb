@@ -38,7 +38,7 @@ class RekomendasiJalur extends Component
         $this->alamatHasilGeocode = null;
 
         if (strlen(trim($this->alamatLengkap)) < 5) {
-            $this->cekJarakError = 'Masukkan alamat yang lebih spesifik (minimal 5 karakter).';
+            $this->cekJarakError = 'Masukkan alamat yang lebih spesifik (minimal 5 karakter), atau koordinat "lat, lng".';
             return;
         }
 
@@ -47,14 +47,21 @@ class RekomendasiJalur extends Component
             return;
         }
 
-        $result = Geocoder::search($this->alamatLengkap);
-        if (! $result) {
-            $this->cekJarakError = 'Alamat tidak ditemukan. Coba tambahkan nama jalan atau kelurahan.';
-            return;
-        }
+        $coords = $this->parseCoordinates($this->alamatLengkap);
 
-        $this->jarakKm = $this->sekolah->distanceKmFrom($result['lat'], $result['lng']);
-        $this->alamatHasilGeocode = $result['display_name'] ?? null;
+        if ($coords !== null) {
+            $this->jarakKm = $this->sekolah->distanceKmFrom($coords['lat'], $coords['lng']);
+            $this->alamatHasilGeocode = sprintf('Koordinat: %.6f, %.6f', $coords['lat'], $coords['lng']);
+        } else {
+            $result = Geocoder::search($this->alamatLengkap);
+            if (! $result) {
+                $this->cekJarakError = 'Alamat tidak ditemukan. Coba tambahkan nama jalan atau kelurahan, atau gunakan koordinat (contoh: -3.009556, 104.818746).';
+                return;
+            }
+
+            $this->jarakKm = $this->sekolah->distanceKmFrom($result['lat'], $result['lng']);
+            $this->alamatHasilGeocode = $result['display_name'] ?? null;
+        }
 
         if ($this->jarakKm !== null) {
             $this->answers['jarak_sekolah'] = match (true) {
@@ -63,6 +70,23 @@ class RekomendasiJalur extends Component
                 default => '> 10 km',
             };
         }
+    }
+
+    private function parseCoordinates(string $input): ?array
+    {
+        $cleaned = trim($input);
+        if (! preg_match('/^\s*(-?\d+(?:\.\d+)?)\s*[,;\s]\s*(-?\d+(?:\.\d+)?)\s*$/', $cleaned, $m)) {
+            return null;
+        }
+
+        $lat = (float) $m[1];
+        $lng = (float) $m[2];
+
+        if ($lat < -90 || $lat > 90 || $lng < -180 || $lng > 180) {
+            return null;
+        }
+
+        return ['lat' => $lat, 'lng' => $lng];
     }
 
     public function submit(): void
