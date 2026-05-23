@@ -75,5 +75,33 @@ class Pendaftar extends Model
                 $pendaftar->nomor_pendaftaran = sprintf('%s-%s-%05d', $prefix ?: 'SPMB', $year, $count);
             }
         });
+
+        static::created(function (Pendaftar $pendaftar) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($pendaftar->email)
+                    ->send(new \App\Mail\PendaftarBaru($pendaftar));
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        });
+
+        static::updating(function (Pendaftar $pendaftar) {
+            if ($pendaftar->isDirty('status')) {
+                $pendaftar->statusLama = $pendaftar->getOriginal('status');
+            }
+        });
+
+        static::updated(function (Pendaftar $pendaftar) {
+            if (! empty($pendaftar->statusLama) && $pendaftar->statusLama !== $pendaftar->status) {
+                try {
+                    \Illuminate\Support\Facades\Mail::to($pendaftar->email)
+                        ->send(new \App\Mail\StatusBerubah($pendaftar, $pendaftar->statusLama));
+                } catch (\Throwable $e) {
+                    report($e);
+                }
+            }
+        });
     }
+
+    public ?string $statusLama = null;
 }

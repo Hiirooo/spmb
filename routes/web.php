@@ -21,6 +21,8 @@ Route::get('/', function () {
 Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
 Route::get('/sekolah/register', fn () => view('sekolah-register'))->name('sekolah.register');
 Route::get('/cek-status', fn () => view('cek-status'))->name('cek-status');
+Route::get('/pengumuman', [SekolahController::class, 'pengumumanIndex'])->name('pengumuman.index');
+Route::get('/pengumuman/{sekolah:slug}', [SekolahController::class, 'pengumumanSekolah'])->name('pengumuman.sekolah');
 Route::get('/sekolah/{sekolah:slug}', [SekolahController::class, 'show'])->name('sekolah.show');
 Route::get('/sekolah/{sekolah:slug}/rekomendasi', [SekolahController::class, 'rekomendasi'])->name('sekolah.rekomendasi');
 
@@ -40,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/portal', [PortalController::class, 'index'])->name('portal');
     Route::get('/portal/dokumen', [PortalController::class, 'dokumen'])->name('portal.dokumen');
     Route::get('/portal/dokumen/{dokumen}/preview', [PortalController::class, 'previewDokumen'])->name('portal.dokumen.preview');
+    Route::get('/portal/pakta-integritas', [PortalController::class, 'paktaIntegritas'])->name('portal.pakta-integritas');
 
     Route::get('/sekolah/{sekolah:slug}/daftar', [SekolahController::class, 'daftar'])->name('sekolah.daftar');
 

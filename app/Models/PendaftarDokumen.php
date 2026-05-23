@@ -46,4 +46,18 @@ class PendaftarDokumen extends Model
             ? number_format($kb, 1).' KB'
             : number_format($kb / 1024, 2).' MB';
     }
+
+    protected static function booted(): void
+    {
+        static::updated(function (PendaftarDokumen $dokumen) {
+            if ($dokumen->wasChanged('status') && in_array($dokumen->status, ['diterima', 'ditolak'], true)) {
+                try {
+                    \Illuminate\Support\Facades\Mail::to($dokumen->pendaftar->email)
+                        ->send(new \App\Mail\DokumenDiverifikasi($dokumen));
+                } catch (\Throwable $e) {
+                    report($e);
+                }
+            }
+        });
+    }
 }

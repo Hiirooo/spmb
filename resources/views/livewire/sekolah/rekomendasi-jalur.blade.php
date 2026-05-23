@@ -1,10 +1,43 @@
 <div>
     @if(! $showResult)
+        @if($sekolah->latitude && $sekolah->longitude)
+            <div class="mb-6 rounded-lg border border-gold-200 bg-gold-50/40 p-5">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold-700">Otomatis Hitung Jarak</p>
+                <p class="mt-2 text-sm text-ink-700">
+                    Masukkan alamat lengkap Anda untuk mengisi otomatis pertanyaan jarak ke sekolah.
+                </p>
+                <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+                    <input type="text" wire:model="alamatLengkap" placeholder="Contoh: Jl. Sudirman, Ilir Barat, Palembang"
+                        class="flex-1 rounded-md border-ink-300 bg-white px-3 py-2 text-sm placeholder:text-ink-400 focus:border-ink-900 focus:ring-ink-900" />
+                    <button type="button" wire:click="cekJarak" wire:loading.attr="disabled" wire:target="cekJarak"
+                        class="inline-flex items-center justify-center gap-2 rounded-md bg-ink-900 px-4 py-2 text-sm font-semibold text-paper hover:bg-ink-800 disabled:opacity-50">
+                        <svg wire:loading wire:target="cekJarak" class="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                        Cek Jarak
+                    </button>
+                </div>
+                @if($jarakKm !== null)
+                    <div class="mt-3 rounded-md bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+                        <strong>Jarak:</strong> {{ $jarakKm }} km dari {{ $sekolah->nama }}
+                        @if($alamatHasilGeocode) · <span class="text-emerald-600/70">{{ $alamatHasilGeocode }}</span> @endif
+                        · pertanyaan jarak (#5) terisi otomatis ✓
+                    </div>
+                @elseif($cekJarakError)
+                    <div class="mt-3 rounded-md bg-rose-50 px-3 py-2 text-xs text-rose-700">{{ $cekJarakError }}</div>
+                @endif
+            </div>
+        @endif
+
         <form wire:submit="submit" class="space-y-6">
             @foreach($questions as $key => $q)
                 <div class="rounded-lg border border-ink-200 bg-white p-6 shadow-soft">
                     <p class="font-serif text-base font-semibold text-ink-900">
                         {{ $loop->iteration }}. {{ $q['label'] }}
+                        @if($key === 'jarak_sekolah' && $jarakKm !== null)
+                            <span class="ml-2 inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">Auto: {{ $jarakKm }} km</span>
+                        @endif
                     </p>
                     <div class="mt-4 grid gap-2 sm:grid-cols-2">
                         @foreach($q['options'] as $value => $label)

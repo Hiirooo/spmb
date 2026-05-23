@@ -60,4 +60,18 @@ class PortalController extends Controller
             'inline'
         );
     }
+
+    public function paktaIntegritas(Request $request)
+    {
+        $pendaftar = $request->user()->pendaftar;
+        abort_unless($pendaftar, 403, 'Anda belum mendaftar.');
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.pakta-integritas', [
+            'pendaftar' => $pendaftar,
+        ])->setPaper('a4');
+
+        $filename = "pakta-integritas-{$pendaftar->nomor_pendaftaran}.pdf";
+
+        return $pdf->stream($filename);
+    }
 }

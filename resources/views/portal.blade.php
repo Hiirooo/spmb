@@ -106,6 +106,10 @@
                                 <span class="text-ink-700">Unggah / Kelola Dokumen</span>
                                 <svg class="h-3.5 w-3.5 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                             </a>
+                            <a href="{{ route('portal.pakta-integritas') }}" target="_blank" class="flex items-center justify-between rounded-md border border-ink-200 px-4 py-3 text-sm hover:bg-paper">
+                                <span class="text-ink-700">Unduh Pakta Integritas (PDF)</span>
+                                <svg class="h-3.5 w-3.5 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                            </a>
                             <a href="{{ route('daftar.sukses', ['nomor' => $pendaftar->nomor_pendaftaran]) }}" class="flex items-center justify-between rounded-md border border-ink-200 px-4 py-3 text-sm hover:bg-paper">
                                 <span class="text-ink-700">Lihat Bukti Daftar</span>
                                 <svg class="h-3.5 w-3.5 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>

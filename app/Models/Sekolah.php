@@ -17,6 +17,8 @@ class Sekolah extends Model
         'kabupaten_kota',
         'provinsi',
         'alamat',
+        'latitude',
+        'longitude',
         'email_kontak',
         'telepon_kontak',
         'website',
@@ -41,7 +43,17 @@ class Sekolah extends Model
             'pendaftaran_dibuka_pada' => 'datetime',
             'pendaftaran_ditutup_pada' => 'datetime',
             'daya_tampung_total' => 'integer',
+            'latitude' => 'float',
+            'longitude' => 'float',
         ];
+    }
+
+    public function distanceKmFrom(float $lat, float $lng): ?float
+    {
+        if (! $this->latitude || ! $this->longitude) {
+            return null;
+        }
+        return \App\Services\Geocoder::distanceKm($this->latitude, $this->longitude, $lat, $lng);
     }
 
     protected static function booted(): void

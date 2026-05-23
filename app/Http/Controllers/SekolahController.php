@@ -88,4 +88,56 @@ class SekolahController extends Controller
             'jalur' => $jalur,
         ]);
     }
+
+    public function pengumumanIndex(Request $request)
+    {
+        $sekolahs = Sekolah::query()
+            ->where('is_active', true)
+            ->withCount(['pendaftars as diterima_count' => fn ($q) => $q->where('status', 'diterima')])
+            ->orderByDesc('diterima_count')
+            ->orderBy('nama')
+            ->paginate(12);
+
+        return view('pengumuman-index', ['sekolahs' => $sekolahs]);
+    }
+
+    public function pengumumanSekolah(Request $request, Sekolah $sekolah)
+    {
+        abort_unless($sekolah->is_active, 404);
+
+        $jalurFilter = $request->string('jalur')->toString();
+        $search = $request->string('q')->toString();
+
+        $query = $sekolah->pendaftars()->where('status', 'diterima');
+
+        if ($jalurFilter && array_key_exists($jalurFilter, \App\Support\SpmbDokumen::JALUR)) {
+            $query->where('jalur_pendaftaran', $jalurFilter);
+        }
+        if ($search) {
+            $query->where(fn ($q) => $q
+                ->where('nama_lengkap', 'like', "%{$search}%")
+                ->orWhere('nomor_pendaftaran', 'like', "%{$search}%")
+                ->orWhere('nisn', 'like', "%{$search}%"));
+        }
+
+        $pendaftars = $query
+            ->orderBy('jalur_pendaftaran')
+            ->orderBy('nama_lengkap')
+            ->paginate(50)
+            ->withQueryString();
+
+        $countPerJalur = $sekolah->pendaftars()
+            ->where('status', 'diterima')
+            ->selectRaw('jalur_pendaftaran, COUNT(*) as total')
+            ->groupBy('jalur_pendaftaran')
+            ->pluck('total', 'jalur_pendaftaran');
+
+        return view('pengumuman-sekolah', [
+            'sekolah' => $sekolah,
+            'pendaftars' => $pendaftars,
+            'jalurFilter' => $jalurFilter,
+            'q' => $search,
+            'countPerJalur' => $countPerJalur,
+        ]);
+    }
 }

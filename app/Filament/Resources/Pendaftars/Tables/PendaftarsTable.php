@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Pendaftars\Tables;
 
 use App\Support\SpmbDokumen;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -92,6 +93,16 @@ class PendaftarsTable
                         ->distinct()
                         ->pluck('sekolah_tujuan', 'sekolah_tujuan')
                         ->all()),
+            ])
+            ->headerActions([
+                Action::make('export')
+                    ->label('Export Excel')
+                    ->icon('heroicon-m-arrow-down-tray')
+                    ->color('gray')
+                    ->action(function (Table $table) {
+                        $query = $table->getLivewire()->getFilteredTableQuery();
+                        return (new \App\Exports\PendaftarExport($query))->download();
+                    }),
             ])
             ->recordActions([
                 ViewAction::make(),
