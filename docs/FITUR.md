@@ -419,6 +419,8 @@ Fungsi:
 - Menerima dokumen.
 - Menolak dokumen dengan alasan.
 - Filter dokumen berdasarkan status.
+- Mencatat log verifikasi dokumen.
+- Mengirim email otomatis ke siswa saat dokumen diterima atau ditolak.
 
 Status dokumen:
 
@@ -433,6 +435,8 @@ Status: tersedia
 Fungsi:
 
 - Melihat log pendaftaran dibuat.
+- Melihat log dokumen diunggah.
+- Melihat log dokumen diverifikasi.
 - Melihat log perubahan status.
 - Menampilkan waktu, aksi, user, status awal, status akhir, dan catatan.
 
@@ -508,12 +512,14 @@ Fungsi:
 
 ### Email Dokumen Diverifikasi
 
-Status: sebagian tersedia
+Status: tersedia
 
-Keterangan:
+Fungsi:
 
-- Class email dan template sudah tersedia.
-- Action verifikasi dokumen belum terlihat memanggil email ini secara otomatis.
+- Mengirim email saat dokumen diterima.
+- Mengirim email saat dokumen ditolak.
+- Menyertakan catatan panitia jika dokumen ditolak.
+- Mengarahkan siswa kembali ke halaman dokumen untuk melihat status atau upload ulang.
 
 ## 11. API dan Referensi Data
 
@@ -551,6 +557,8 @@ Catatan:
 - Export data pendaftar sudah tersedia.
 - Rekomendasi jalur sudah ada.
 - Kuota per jalur sudah dihitung.
+- Email otomatis dokumen diverifikasi sudah aktif.
+- Audit log dokumen sudah aktif.
 
 ## 13. Pengembangan Lanjutan yang Disarankan
 
@@ -561,7 +569,6 @@ Prioritas tinggi:
 3. Cetak kartu pendaftaran dengan QR Code.
 4. Manajemen periode, tahun ajaran, dan gelombang pendaftaran.
 5. Bulk approve/reject pendaftar.
-6. Pengiriman email otomatis saat dokumen diterima/ditolak.
 
 Prioritas menengah:
 
@@ -574,7 +581,6 @@ Prioritas menengah:
 Prioritas keamanan dan tata kelola:
 
 1. Import data siswa lokal untuk validasi NISN/NIK.
-2. Audit log dokumen yang lebih lengkap.
-3. Backup dan restore data pendaftaran.
-4. Hardening permission file dokumen.
-5. Dokumentasi SOP panitia.
+2. Backup dan restore data pendaftaran.
+3. Hardening permission file dokumen.
+4. Dokumentasi SOP panitia.
